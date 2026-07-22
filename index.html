@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direct IT × Fujitsu — Campaign Intake Form</title>
+<style>
+  :root{
+    --ink:#1a2233;--muted:#5c6b85;--faint:#8593ac;--line:#d7dee8;--line2:#eef1f6;
+    --lock:#0d7d5a;--lockbg:#e9f6f0;--fill:#1f5fbf;--fillbg:#f2f7fe;--panel:#f7f9fc;--white:#fff;
+    --red:#c0392b;--redbg:#fdece9;--green:#0d7d5a;--greenbg:#e9f6f0;--amber:#b7791f;--amberbg:#fdf4e3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#e8ebf1;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;line-height:1.45}
+  .bar{position:sticky;top:0;z-index:20;background:#12233f;color:#fff;padding:9px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .bar .t{font-size:13px;font-weight:600}
+  .bar .t small{font-weight:400;color:#9db4d6;margin-left:8px}
+  .bar .btns{display:flex;gap:7px;flex-wrap:wrap}
+  .bar button{font-size:12px;border:1px solid #33507d;background:#1c355c;color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer}
+  .bar button:hover{background:#264372}
+  .bar button.primary{background:#2f7d5a;border-color:#2f7d5a}
+  .bar button.ghost{background:transparent}
+
+  .wrap{max-width:900px;margin:16px auto 60px;padding:0 16px}
+  .standard{background:var(--lockbg);border:1px solid #c7e6d8;border-left:3px solid var(--lock);border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#14433a}
+  .standard b{color:var(--lock);text-transform:uppercase;font-size:10px;letter-spacing:.6px}
+  .standard ul{margin:5px 0 0;padding-left:16px;columns:2;column-gap:26px}
+  .standard li{margin:1px 0}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:9px;padding:15px 17px;margin-bottom:13px;box-shadow:0 1px 3px rgba(20,30,50,.05)}
+  .card h2{font-size:12px;text-transform:uppercase;letter-spacing:.7px;margin:0 0 11px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .card h2 .n{background:var(--ink);color:#fff;width:18px;height:18px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+  .row{display:grid;grid-template-columns:170px 1fr;gap:10px;align-items:start;margin-bottom:9px}
+  .row label{font-size:12px;color:var(--muted);font-weight:600;padding-top:7px}
+  .row .field{min-width:0}
+  input[type=text],input[type=number],input[type=date],textarea,select{width:100%;font:inherit;font-size:12.5px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 9px;background:#fff}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--fill);box-shadow:0 0 0 2px var(--fillbg)}
+  textarea{resize:vertical;min-height:38px;line-height:1.4}
+  .hint{font-size:10.5px;color:var(--faint);margin-top:3px}
+  .inline{display:flex;gap:7px;flex-wrap:wrap}
+  .inline label{padding-top:0;display:inline-flex;align-items:center;gap:5px;font-weight:500;color:var(--ink);font-size:12px;border:1px solid var(--line);padding:5px 9px;border-radius:6px;cursor:pointer;background:#fff}
+  .inline input{width:auto}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+
+  /* feasibility */
+  .feas{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 13px}
+  .feas .in{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:11px}
+  .feas .in .fg label{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px}
+  .verdict{border-radius:7px;padding:10px 13px;font-size:12.5px;display:flex;gap:10px;align-items:flex-start}
+  .verdict .ic{font-weight:700;font-size:15px;line-height:1.2}
+  .verdict.idle{background:#eef1f6;color:var(--muted)}
+  .verdict.ok{background:var(--greenbg);color:var(--green);border:1px solid #b6ddca}
+  .verdict.warn{background:var(--amberbg);color:var(--amber);border:1px solid #ecd8a8}
+  .verdict.bad{background:var(--redbg);color:var(--red);border:1px solid #f0c3bb}
+  .verdict b{font-weight:700}
+  .hidden{display:none}
+
+  .flag{font-size:11px;background:var(--amberbg);color:var(--amber);border:1px solid #ecd8a8;border-radius:6px;padding:6px 10px;margin-top:6px}
+  .assetflag{margin-top:6px;font-size:11.5px;font-weight:600}
+  .assetflag.ok{color:var(--green)} .assetflag.bad{color:var(--red)}
+
+  .qa{display:grid;grid-template-columns:1fr 1fr;gap:3px 22px}
+  .qa label{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line2);font-size:12.5px;cursor:pointer}
+  .qa input{width:15px;height:15px}
+
+  #out{width:100%;min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;white-space:pre;background:#0f1b2f;color:#d7e3f5;border:none;border-radius:8px;padding:12px}
+  .foot{font-size:10.5px;color:var(--faint);text-align:center;margin-top:14px}
+
+  @media print{
+    body{background:#fff}.bar,.foot,.noprint{display:none}
+    .wrap{margin:0;max-width:100%}
+    .card,.standard{box-shadow:none;break-inside:avoid}
+    input,textarea,select{border-color:#bbb}
+    @page{size:A4;margin:11mm}
+  }
+  @media(max-width:680px){.row{grid-template-columns:1fr}.row label{padding-top:0}.two,.feas .in,.qa{grid-template-columns:1fr}.standard ul{columns:1}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="t">Direct IT × Fujitsu — Campaign Intake Form <small>fill on the set-up call</small></div>
+  <div class="btns">
+    <button class="ghost" onclick="loadExample()">Load example</button>
+    <button class="ghost" onclick="clearForm()">Clear</button>
+    <button onclick="window.print()">Save as PDF</button>
+    <button class="primary" onclick="buildText()">Copy brief as text ▸</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="standard">
+    <b>The standard — locked, every campaign</b>
+    <ul>
+      <li>Content Syndication + Display (programmatic), profiled leads only</li>
+      <li>3 non-screen-out profiling questions (owner signs off)</li>
+      <li>Seniority floor: Manager+ · max 2 leads/account</li>
+      <li>Minimum 3–4 assets (for valid performance analysis)</li>
+      <li>Banners: 300×250, 728×90, 160×600, 300×600, 970×250, 320×50</li>
+      <li>DNCR check + opt-in captured · daily dedupe vs live Fujitsu ANZ</li>
+      <li>Feasibility must pass before build (Section 3)</li>
+      <li>No build until name, geo, audience, Qs, assets &amp; owner sign-off are in</li>
+    </ul>
+  </div>
+
+  <!-- 1 BASICS -->
+  <div class="card">
+    <h2><span class="n">1</span> Campaign basics</h2>
+    <div class="two">
+      <div class="row"><label>Campaign / Job name</label><div class="field"><input type="text" id="f_name" placeholder="Fujitsu ANZ … FY26Qx Content Syndication &amp; Display"><div class="hint">Name it right — it's how everything is tracked (partner, geo).</div></div></div>
+      <div class="row"><label>Portfolio owner</label><div class="field"><input type="text" id="f_owner" placeholder="e.g. Laura"><div class="hint">Signs off audience, questions &amp; assets.</div></div></div>
+      <div class="row"><label>Partner / vendor</label><div class="field"><input type="text" id="f_vendor" placeholder="e.g. ServiceNow Pte. Ltd."></div></div>
+      <div class="row"><label>Expected start</label><div class="field"><input type="date" id="f_start"></div></div>
+      <div class="row"><label>Currency</label><div class="field"><input type="text" id="f_ccy" value="AUD"></div></div>
+      <div class="row"><label>Geographies</label><div class="field"><div class="inline">
+        <label><input type="checkbox" class="geo" value="Australia">Australia</label>
+        <label><input type="checkbox" class="geo" value="New Zealand">New Zealand</label>
+      </div><div class="hint">Be explicit — mixed geo is where leads leak.</div></div></div>
+    </div>
+  </div>
+
+  <!-- 2 TARGETING -->
+  <div class="card">
+    <h2><span class="n">2</span> Targeting</h2>
+    <div class="row"><label>Targeting type</label><div class="field">
+      <select id="f_type" onchange="recalc()">
+        <option value="">— select —</option>
+        <option value="tal">Targeted Account List (TAL)</option>
+        <option value="talws">TAL + Whitespace</option>
+        <option value="ws">Whitespace Only</option>
+      </select></div></div>
+    <div class="row"><label>Industries</label><div class="field"><textarea id="f_ind" placeholder="e.g. Financial Services (all) + Technology &amp; IT (all)"></textarea></div></div>
+    <div class="row"><label>Employee size</label><div class="field"><input type="text" id="f_size" placeholder="e.g. 500+ (501–1k, 1k–5k, 5k–10k, 10k+)"></div></div>
+    <div class="row"><label>Personas / functions</label><div class="field"><textarea id="f_persona" placeholder="e.g. IT/Tech Leadership, Cybersecurity, Risk &amp; Compliance (IT), Exec Leadership…"></textarea></div></div>
+    <div class="row"><label>Min. seniority</label><div class="field"><input type="text" id="f_sen" value="Manager+"></div></div>
+    <div class="row"><label>Example titles</label><div class="field"><textarea id="f_titles" placeholder="e.g. CIO, CISO, CRO, GRC, Head of Risk / IT Ops, IT Ops Mgr…"></textarea></div></div>
+    <div class="row"><label>Exclusions / suppression</label><div class="field"><textarea id="f_excl" placeholder="Big 4 banks (CBA, Westpac, NAB, ANZ); MSPs, IT resellers/distributors, hardware/software vendors, systems integrators; contact-level dedupe; daily dedupe vs live Fujitsu ANZ"></textarea></div></div>
+  </div>
+
+  <!-- 3 FEASIBILITY -->
+  <div class="card">
+    <h2><span class="n">3</span> Feasibility — do the numbers stack?</h2>
+    <div class="feas">
+      <div class="in">
+        <div class="fg"><label>Lead target</label><input type="number" id="c_leads" oninput="recalc()" placeholder="e.g. 71"></div>
+        <div class="fg" id="w_accbox"><label>Net accounts available (after exclusions) — TAL</label><input type="number" id="c_acc" oninput="recalc()" placeholder="accounts on the TAL"></div>
+        <div class="fg" id="w_audbox"><label>Audience / contact pool — Whitespace</label><input type="number" id="c_aud" oninput="recalc()" placeholder="contacts available"></div>
+        <div class="fg" id="w_ratebox"><label>Assumed CS response rate %</label><input type="number" id="c_rate" step="0.1" oninput="recalc()" placeholder="calibrate from past campaign"></div>
+      </div>
+      <div id="v_tal" class="verdict idle hidden"><span class="ic">•</span><span id="v_tal_t"></span></div>
+      <div id="v_ws" class="verdict idle hidden" style="margin-top:8px"><span class="ic">•</span><span id="v_ws_t"></span></div>
+      <div id="v_none" class="verdict idle"><span class="ic">•</span><span>Pick a targeting type and enter the lead target to check feasibility.</span></div>
+    </div>
+    <div class="hint" style="margin-top:7px">Rule: <b>TAL</b> needs accounts ≥ leads × 7 (≈14% account-to-lead). <b>Whitespace</b> supported leads = pool × response rate. Below target → don't build, go back to the owner.</div>
+  </div>
+
+  <!-- 4 ASSETS -->
+  <div class="card">
+    <h2><span class="n">4</span> Assets &amp; creative</h2>
+    <div class="two">
+      <div class="row"><label>Number of assets</label><div class="field"><input type="number" id="f_assets" oninput="assetCheck()" placeholder="min 3–4"><div id="assetmsg" class="assetflag"></div></div></div>
+      <div class="row"><label>Assets link</label><div class="field"><input type="text" id="f_assetlink" placeholder="Drive / hub link"></div></div>
+    </div>
+    <div class="row"><label>Banners for display</label><div class="field"><div class="inline">
+      <label><input type="checkbox" id="f_banners">Standard size kit provided (300×250, 728×90, 160×600, 300×600, 970×250, 320×50)</label>
+    </div></div></div>
+  </div>
+
+  <!-- 5 PROFILING -->
+  <div class="card">
+    <h2><span class="n">5</span> Profiling questions <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint);font-size:11px">— 3, non-screen-out</span></h2>
+    <div class="row"><label>Q1</label><div class="field"><textarea id="f_q1" placeholder="Profiling question — capture intent, don't reject"></textarea></div></div>
+    <div class="row"><label>Q2</label><div class="field"><textarea id="f_q2"></textarea></div></div>
+    <div class="row"><label>Q3</label><div class="field"><textarea id="f_q3"></textarea></div></div>
+    <div class="row"><label>Screen-out?</label><div class="field"><div class="inline">
+      <label><input type="checkbox" id="f_screenout" onchange="soCheck()">This campaign uses a screen-out (exception to standard)</label>
+    </div><div id="somsg" class="flag hidden">Heads-up: standard is 3 <b>non</b>-screen-out questions. Confirm the owner wants a screen-out here.</div></div></div>
+  </div>
+
+  <!-- 6 COMMERCIALS -->
+  <div class="card">
+    <h2><span class="n">6</span> Commercials</h2>
+    <div class="two">
+      <div class="row"><label>CS profiled leads</label><div class="field"><input type="number" id="f_csleads" oninput="commCalc()" placeholder="e.g. 71"></div></div>
+      <div class="row"><label>Cost per lead (CPL)</label><div class="field"><input type="number" id="f_cpl" oninput="commCalc()" placeholder="e.g. 105"></div></div>
+      <div class="row"><label>CS value</label><div class="field"><input type="text" id="f_csval" readonly placeholder="auto" style="background:#f4f6fa"></div></div>
+      <div class="row"><label>Programmatic budget</label><div class="field"><input type="number" id="f_prog" placeholder="e.g. 2500"></div></div>
+      <div class="row"><label>Impressions</label><div class="field"><input type="number" id="f_imp" placeholder="e.g. 89285"></div></div>
+      <div class="row"><label>CPM</label><div class="field"><input type="number" id="f_cpm" placeholder="e.g. 28"></div></div>
+    </div>
+  </div>
+
+  <!-- 7 QA GATE -->
+  <div class="card">
+    <h2><span class="n">7</span> Pre-launch QA gate</h2>
+    <div class="qa">
+      <label><input type="checkbox">Script attached</label>
+      <label><input type="checkbox">3 questions set &amp; owner-approved</label>
+      <label><input type="checkbox">Audience / TAL count confirmed vs target</label>
+      <label><input type="checkbox">Exclusion + suppression list loaded</label>
+      <label><input type="checkbox">Assets (3–4) + banners in hub</label>
+      <label><input type="checkbox">DNCR check + opt-in capture in place</label>
+      <label><input type="checkbox">Naming + geo verified</label>
+      <label><input type="checkbox">Portfolio-owner sign-off received</label>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="card noprint">
+    <h2><span class="n">▸</span> Brief as text <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint);font-size:11px">— paste into the set-up form or an email</span></h2>
+    <textarea id="out" readonly placeholder="Fill the form, then hit &quot;Copy brief as text&quot; up top — the completed brief appears here and copies to your clipboard."></textarea>
+    <div class="hint" id="copied"></div>
+  </div>
+
+  <div class="foot">Direct IT — Fujitsu campaign intake. Locked standard applies to all campaigns; feasibility must pass before build.</div>
+</div>
+
+<script>
+function val(id){return (document.getElementById(id).value||'').trim();}
+function geos(){return [...document.querySelectorAll('.geo:checked')].map(c=>c.value).join(', ');}
+
+function fmt(n){return n.toLocaleString('en-AU',{maximumFractionDigits:0});}
+
+function recalc(){
+  const type=val('f_type'), leads=parseFloat(val('c_leads'));
+  const talBox=document.getElementById('w_accbox'), audBox=document.getElementById('w_audbox'), rateBox=document.getElementById('w_ratebox');
+  const showTAL=(type==='tal'||type==='talws'), showWS=(type==='ws'||type==='talws');
+  talBox.style.display=showTAL?'':'none';
+  audBox.style.display=showWS?'':'none';
+  rateBox.style.display=showWS?'':'none';
+  const vTal=document.getElementById('v_tal'), vWs=document.getElementById('v_ws'), vNone=document.getElementById('v_none');
+  vTal.classList.add('hidden'); vWs.classList.add('hidden'); vNone.classList.add('hidden');
+
+  if(!type||!leads){vNone.classList.remove('hidden');return;}
+
+  // TAL
+  if(showTAL){
+    const acc=parseFloat(val('c_acc'));
+    vTal.classList.remove('hidden');
+    if(!acc){setV(vTal,'idle','•','TAL: enter net accounts. Need ~'+fmt(leads*6.5)+'–'+fmt(leads*7.5)+' for '+fmt(leads)+' leads.');}
+    else{
+      const needHi=leads*7.5, needMid=leads*7, needLo=leads*6.5;
+      if(acc>=needHi) setV(vTal,'ok','✓','<b>TAL comfortable.</b> '+fmt(acc)+' accounts vs ~'+fmt(needMid)+' needed for '+fmt(leads)+' leads.');
+      else if(acc>=needLo) setV(vTal,'warn','!','<b>TAL borderline.</b> '+fmt(acc)+' accounts — within range but tight (~'+fmt(needMid)+' ideal). Consider adding whitespace/lookalikes.');
+      else setV(vTal,'bad','✕','<b>TAL short by ~'+fmt(Math.ceil(needMid-acc))+' accounts.</b> '+fmt(acc)+' vs ~'+fmt(needMid)+' needed. Add whitespace or cut the target.');
+    }
+  }
+  // Whitespace
+  if(showWS){
+    const aud=parseFloat(val('c_aud')), rate=parseFloat(val('c_rate'))/100;
+    vWs.classList.remove('hidden');
+    if(!aud||!rate){setV(vWs,'idle','•','Whitespace: enter pool + response rate. Supported leads = pool × rate.');}
+    else{
+      const supported=aud*rate, need=leads/rate;
+      if(supported>=leads*1.1) setV(vWs,'ok','✓','<b>Whitespace comfortable.</b> Pool of '+fmt(aud)+' × '+(rate*100).toFixed(1)+'% ≈ '+fmt(supported)+' leads vs '+fmt(leads)+' target.');
+      else if(supported>=leads) setV(vWs,'warn','!','<b>Whitespace tight.</b> ~'+fmt(supported)+' supported vs '+fmt(leads)+' target — little headroom. Need ~'+fmt(need)+' contacts.');
+      else setV(vWs,'bad','✕','<b>Whitespace short.</b> ~'+fmt(supported)+' supported vs '+fmt(leads)+' target. Need ~'+fmt(need)+' contacts at '+(rate*100).toFixed(1)+'%.');
+    }
+  }
+}
+function setV(el,cls,ic,txt){el.className='verdict '+cls;el.querySelector('.ic').textContent=ic;el.children[1].innerHTML=txt;}
+
+function assetCheck(){
+  const n=parseFloat(val('f_assets')), m=document.getElementById('assetmsg');
+  if(!n){m.textContent='';m.className='assetflag';return;}
+  if(n<3){m.textContent='✕ Below minimum — need 3–4 for valid performance analysis.';m.className='assetflag bad';}
+  else{m.textContent='✓ Meets the 3–4 minimum.';m.className='assetflag ok';}
+}
+function soCheck(){document.getElementById('somsg').classList.toggle('hidden',!document.getElementById('f_screenout').checked);}
+function commCalc(){
+  const l=parseFloat(val('f_csleads')), c=parseFloat(val('f_cpl'));
+  document.getElementById('f_csval').value=(l&&c)?fmt(l*c)+' '+val('f_ccy'):'';
+}
+
+function buildText(){
+  commCalc();
+  const q=[val('f_q1'),val('f_q2'),val('f_q3')].filter(Boolean).map((x,i)=>'   Q'+(i+1)+': '+x).join('\n');
+  const typeMap={tal:'Targeted Account List (TAL)',talws:'TAL + Whitespace',ws:'Whitespace Only','':'—'};
+  const t=
+`FUJITSU CAMPAIGN BRIEF
+======================
+Campaign / Job : ${val('f_name')||'—'}
+Portfolio owner: ${val('f_owner')||'—'}   (sign-off required)
+Partner/vendor : ${val('f_vendor')||'—'}
+Geographies    : ${geos()||'—'}
+Start / currency: ${val('f_start')||'—'} / ${val('f_ccy')||'AUD'}
+
+TARGETING
+Type      : ${typeMap[val('f_type')]}
+Industries: ${val('f_ind')||'—'}
+Emp. size : ${val('f_size')||'—'}
+Personas  : ${val('f_persona')||'—'}
+Seniority : ${val('f_sen')||'Manager+'}
+Titles    : ${val('f_titles')||'—'}
+Exclusions: ${val('f_excl')||'—'}
+
+FEASIBILITY
+Lead target: ${val('c_leads')||'—'}
+${(val('f_type')==='tal'||val('f_type')==='talws')?'TAL accounts (net): '+(val('c_acc')||'—')+'  [rule: leads × 7]\n':''}${(val('f_type')==='ws'||val('f_type')==='talws')?'Whitespace pool: '+(val('c_aud')||'—')+' @ '+(val('c_rate')||'—')+'% response\n':''}
+ASSETS
+Count/link: ${val('f_assets')||'—'} — ${val('f_assetlink')||'—'}
+Banners   : ${document.getElementById('f_banners').checked?'standard kit provided':'NOT confirmed'}
+
+PROFILING QUESTIONS (standard: 3 non-screen-out)
+${q||'   —'}
+Screen-out: ${document.getElementById('f_screenout').checked?'YES (exception — confirm with owner)':'No'}
+
+COMMERCIALS
+CS: ${val('f_csleads')||'—'} leads @ ${val('f_cpl')||'—'} = ${val('f_csval')||'—'} ${val('f_ccy')}
+Programmatic: ${val('f_prog')||'—'} ${val('f_ccy')} / ${val('f_imp')||'—'} impressions @ ${val('f_cpm')||'—'} CPM`;
+  const o=document.getElementById('out'); o.value=t;
+  navigator.clipboard&&navigator.clipboard.writeText(t).then(()=>{
+    const c=document.getElementById('copied');c.textContent='Copied to clipboard ✓';setTimeout(()=>c.textContent='',2500);
+  });
+  o.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function clearForm(){
+  document.querySelectorAll('input, textarea, select').forEach(el=>{
+    if(el.type==='checkbox'){el.checked=false;}
+    else if(el.id==='f_ccy'){el.value='AUD';}
+    else if(el.id==='f_sen'){el.value='Manager+';}
+    else if(el.readOnly&&el.id!=='out'){el.value='';}
+    else{el.value='';}
+  });
+  document.getElementById('out').value='';
+  recalc();assetCheck();soCheck();commCalc();
+}
+
+function loadExample(){
+  const set=(id,v)=>document.getElementById(id).value=v;
+  set('f_name','Fujitsu ANZ ServiceNow FY26Q1 Content Syndication & Display (FSI)');
+  set('f_owner','Laura'); set('f_vendor','ServiceNow Pte. Ltd.'); set('f_ccy','AUD');
+  document.querySelectorAll('.geo').forEach(c=>c.checked=(c.value==='Australia'||c.value==='New Zealand'));
+  set('f_type','ws'); set('f_ind','Financial Services (all) + Technology & IT (all) — banking, super, insurance');
+  set('f_size','500+ (501–1k, 1k–5k, 5k–10k, 10k+)');
+  set('f_persona','IT/Tech Leadership, Cybersecurity, Risk & Compliance (IT), IT Ops (Mgr+), Exec Leadership (Exec+), Legal & Compliance (Mgr+), Business Ops (Mgr+)');
+  set('f_sen','Manager+');
+  set('f_titles','CIO, CISO, CRO, CCO, GRC, COO (FSI), Head of Risk / IT Ops / Platform / Cyber, IT Ops Mgr, Security / Risk / Field Service Mgr');
+  set('f_excl','Big 4 banks (CBA, Westpac, NAB, ANZ); MSPs, IT resellers/distributors, hardware/software vendors, systems integrators; contact-level dedupe; daily dedupe vs live Fujitsu ANZ');
+  set('c_leads','71'); set('c_aud','12000'); set('c_rate','0.7');
+  set('f_assets','3'); set('f_assetlink','Drive folder (3 assets + banners; more video to follow)');
+  document.getElementById('f_banners').checked=true;
+  set('f_q1','Which of the following are you investing in or evaluating? (select all)');
+  set('f_q2','What is your timeframe for this initiative?');
+  set('f_q3','Which best describes your role in the decision?');
+  document.getElementById('f_screenout').checked=true;
+  set('f_csleads','71'); set('f_cpl','105'); set('f_prog','2500'); set('f_imp','89285'); set('f_cpm','28');
+  recalc();assetCheck();soCheck();commCalc();
+}
+recalc();
+</script>
+</body>
+</html>
