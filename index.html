@@ -115,8 +115,7 @@
   <button onclick="loadExample()">See example</button>
   <button onclick="clearForm()">Clear</button>
   <button onclick="window.print()">Save as PDF</button>
-  <button onclick="buildText()">Copy request</button>
-  <button class="primary" onclick="emailIt()">Send to Direct IT ▸</button>
+  <button class="primary" onclick="buildText()">Copy request ▸</button>
 </div>
 
 <div class="wrap">
@@ -227,7 +226,7 @@
   <!-- OUTPUT -->
   <div class="card noprint">
     <h2><span class="n">▸</span> Request as text <span class="opt">for the email body</span></h2>
-    <textarea id="out" readonly placeholder="Fill the form, then hit &quot;Copy request&quot; or &quot;Send to Direct IT&quot; — the completed request appears here."></textarea>
+    <textarea id="out" readonly placeholder="Fill the form, then hit &quot;Copy request&quot; — the completed request appears here, ready to paste into an email to Direct IT."></textarea>
     <div class="copied" id="copied"></div>
   </div>
 
@@ -318,7 +317,7 @@ function getTree(id,data){
     const subs=[...grp.querySelectorAll('.s')];
     if(subs.length===0){ if(mcb.checked) out.push(main); return; }
     if(mcb.checked && !mcb.indeterminate){ out.push(main+' (all)'); }
-    else { subs.filter(x=>x.checked).forEach(x=>out.push(x)); }
+    else { subs.filter(x=>x.checked).forEach(x=>out.push(x.value)); }
   });
   return out;
 }
