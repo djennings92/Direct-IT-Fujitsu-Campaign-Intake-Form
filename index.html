@@ -409,7 +409,7 @@ function buildText(){
 function emailIt(){
   var t=assemble();document.getElementById('out').value=t;
   var subj='Fujitsu Campaign Request — '+(checks('topic')[0]||val('f_topic_other')||'New campaign');
-  window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(t);
+  window.location.href='mailto:david.jennings@directit.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(t);
 }
 function clearForm(){
   document.querySelectorAll('input,textarea,select').forEach(el=>{
