@@ -136,6 +136,17 @@
   .drop small{display:block;font-size:11px;color:var(--faint);margin-top:3px}
   .filelist{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
   .chip{font-size:11.5px;background:var(--accentbg);border:1px solid #cdddf6;color:var(--ink);border-radius:20px;padding:3px 10px}
+  .subtext{font-size:12px;color:var(--muted);margin:-4px 0 10px}
+  .bigbtn{font-size:13px;font-weight:600;background:var(--brand);border:1px solid var(--brand);color:#fff;padding:10px 18px;border-radius:7px;cursor:pointer}
+  .bigbtn:hover{background:var(--brandink)} .bigbtn:disabled,.bar button:disabled{opacity:.6;cursor:wait}
+  #ts{margin-bottom:10px} #ts:empty{display:none}
+  .submitmsg{margin-top:10px;border-radius:7px;padding:10px 12px;font-size:12.5px;display:none}
+  .submitmsg.show{display:block}
+  .submitmsg.ok{background:var(--greenbg);color:var(--green);border:1px solid #b6ddca}
+  .submitmsg.warn{background:var(--amberbg);color:var(--amber);border:1px solid #ecd8a8}
+  .submitmsg.err{background:var(--redbg);color:var(--red);border:1px solid #f3c2bb}
+  .submitmsg b{font-size:14px}
+  .chip.bad{background:var(--redbg);border-color:#f3c2bb;color:var(--red)}
   .qualbox{border:1px dashed var(--line);border-radius:8px;padding:11px 12px;background:var(--panel);margin-bottom:12px}
   select{appearance:auto}
   @media (max-width:640px){.types{grid-template-columns:1fr}}
@@ -168,7 +179,8 @@
   <button onclick="loadExample()">See example</button>
   <button onclick="clearForm()">Clear</button>
   <button onclick="window.print()">Save as PDF</button>
-  <button class="primary" onclick="copyRequest()">Copy request ▸</button>
+  <button onclick="copyRequest()">Copy request</button>
+  <button class="primary" id="submitbtn" onclick="submitBrief()">Submit to Direct IT ▸</button>
 </div>
 
 <div class="wrap">
@@ -305,7 +317,7 @@
         <small>Existing customers, open opportunities, competitors, recently contacted accounts (.xlsx or .csv)</small>
       </label>
       <div class="filelist" id="filelist"></div>
-      <div class="hint">Files stay on your device. Attach the same files to your email to Direct IT: they're listed in the request so nothing gets missed. Or share a link instead:</div>
+      <div class="hint">Up to 5 files, 10MB each. They're sent securely with your brief when you hit Submit. Or share a link instead:</div>
       <input id="f_excllink" type="text" placeholder="SharePoint / Drive link to exclusion lists" style="margin-top:6px">
     </div>
     <div class="row"><label class="lbl" for="f_excl">Additional exclusions</label><textarea id="f_excl" rows="3" placeholder="Anything else to exclude: named accounts or domains (e.g. Big 4 banks: CBA, Westpac, NAB, ANZ), job titles, sub-industries, states or regions"></textarea></div>
@@ -423,6 +435,14 @@
     <div id="readylist"></div>
   </div>
 
+  <div class="card noprint" id="submitcard">
+    <h2><span class="n">▸</span> Submit your brief</h2>
+    <p class="subtext">Sends the brief and any attached exclusion files straight to the Direct IT team. You'll get a reference number, and we'll come back to you to confirm the detail.</p>
+    <div id="ts"></div>
+    <button type="button" class="bigbtn" id="submitbtn2" onclick="submitBrief()">Submit to Direct IT ▸</button>
+    <div class="submitmsg" id="submitmsg"></div>
+  </div>
+
   <div class="card noprint">
     <h2><span class="n">▸</span> Request as text <span class="sub">for the email body</span></h2>
     <textarea id="out" readonly placeholder='Fill the form, then hit "Copy request". The completed request appears here, ready to paste into an email to Direct IT.'></textarea>
@@ -437,6 +457,9 @@ const TOPICS=["Data & AI","Cyber","App Modernisation","DX","Managed Services","C
 const GEOS=["Australia","New Zealand"];
 const SIZES=["1–10","11–50","51–200","201–500","501–1,000","1,001–5,000","5,001–10,000","10,001+"];
 const BANNERS=["300x250","728x90","160x600","300x600","320x50","970x250"];
+/* Turnstile bot check: paste the site key here once created (leave blank to switch off). */
+const TURNSTILE_SITEKEY='';
+const MAX_FILES=5, MAX_FILE_MB=10;
 const CPL=105, CPQL=423, CPM=28, MIN_DISPLAY=5000, ACC_PER_LEAD=7;
 const KPIS=["Pipeline value (AUD)","Opportunities / SQLs created","Meetings or assessments booked","Lead to opportunity conversion","Leads delivered","Event registrations / attendance","Engagement (impressions, CTR)"];
 const EXCLS=["Existing customers for this solution","Open opportunities / active deals","Competitors","MSPs, resellers and distributors","Hardware and software vendors","Systems integrators","Government","Partner-owned accounts","Leads from recent Fujitsu campaigns"];
@@ -667,9 +690,21 @@ function commCalc(){
   $('f_total').value=tot?`$${fmt(tot)} AUD (ex GST)`:'';
 }
 function fileNames(){return [...($('f_exclfiles').files||[])].map(f=>f.name);}
+function fileProblems(){
+  const fs=[...($('f_exclfiles').files||[])]; const p=[];
+  if(fs.length>MAX_FILES) p.push(`Attach up to ${MAX_FILES} files`);
+  fs.forEach(f=>{
+    if(f.size>MAX_FILE_MB*1048576) p.push(`${f.name} is over ${MAX_FILE_MB}MB`);
+    if(!/\.(xlsx|xls|csv|txt)$/i.test(f.name)) p.push(`${f.name}: use .xlsx, .xls, .csv or .txt`);
+  });
+  return p;
+}
 function renderFiles(){
-  const n=fileNames();
-  $('filelist').innerHTML=n.map(x=>`<span class="chip">📎 ${esc(x)}</span>`).join('');
+  const fs=[...($('f_exclfiles').files||[])];
+  $('filelist').innerHTML=fs.map(f=>{
+    const bad=f.size>MAX_FILE_MB*1048576||!/\.(xlsx|xls|csv|txt)$/i.test(f.name);
+    return `<span class="chip${bad?' bad':''}">📎 ${esc(f.name)} · ${f.size<1048576?Math.max(1,Math.round(f.size/1024))+'KB':(f.size/1048576).toFixed(1)+'MB'}</span>`;
+  }).join('');
 }
 
 /* ---------- readiness ---------- */
@@ -785,7 +820,7 @@ function buildText(){
   L.push('','EXCLUSIONS');
   line('Standard',checks('g_excl').join(', '));
   const fn=fileNames();
-  line('Files',fn.length?fn.join(', ')+' (attached to email)':'');
+  line('Files',fn.length?fn.join(', '):'');
   if(val('f_excllink')) line('List link',val('f_excllink'));
   line('Additional',val('f_excl'));
   if(tal==='Yes') line('TAL vs excl.',radio('prio')||'TBC');
@@ -831,9 +866,57 @@ async function copyRequest(){
   try{await navigator.clipboard.writeText(t);ok=true;}catch(e){
     try{$('out').select();ok=document.execCommand('copy');}catch(_){}
   }
-  const att=fileNames().length?` Remember to attach your ${fileNames().length} exclusion file${fileNames().length>1?'s':''}.`:'';
+  const att=fileNames().length?` Remember to attach your ${fileNames().length} exclusion file${fileNames().length>1?'s':''} if you're emailing it.`:'';
   $('copied').textContent=ok?'✓ Copied. Paste it into an email to your Direct IT account team.'+att:'Select the text above and copy it manually.';
   $('out').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ---------- submit ---------- */
+function collect(){
+  const t=ctype();
+  return {
+    ctype:t, campaignName:val('f_name'), owner:val('f_owner'), email:val('f_email'),
+    solution:[...checks('g_topic'),val('f_topic_other')].filter(Boolean).join(', '),
+    objective:val('f_obj'), kpis:checks('g_kpi'), kpiTarget:val('f_kpi_target'), followUp:val('f_follow'),
+    start:val('f_start'), end:val('f_end'),
+    tal:radio('tal'), talAccounts:val('c_acc'), talLink:val('f_tallink'),
+    exclStandard:checks('g_excl'), exclLink:val('f_excllink'), exclOther:val('f_excl'), exclPriority:radio('prio'),
+    assetsLink:val('f_assetlink'), collateral:val('f_collat'),
+    questionsComplete:[1,2,3].every(n=>val('f_q'+n)),
+    display:t==='df'?radio('disp'):(t==='dcd'?'Yes':'No'), bannerSource:radio('bansrc'), bannerLink:val('f_banlink'),
+    csLeads:val('f_csleads'), qLeads:val('f_qleads'), displayBudget:val('f_prog'),
+    poApprover:val('f_po'), missing:missing()
+  };
+}
+function setMsg(cls,html){const m=$('submitmsg');m.className='submitmsg show '+cls;m.innerHTML=html;m.scrollIntoView({behavior:'smooth',block:'center'});}
+function busy(on){['submitbtn','submitbtn2'].forEach(id=>{const b=$(id);b.disabled=on;b.textContent=on?'Submitting...':'Submit to Direct IT ▸';});}
+let submitted=false;
+async function submitBrief(){
+  if(submitted){setMsg('ok','This brief has already been submitted. Hit <b style="font-size:inherit">Clear</b> to start a new one.');return;}
+  if(!val('f_owner')||!val('f_email')){setMsg('err','Add your name and email in section 1 so we know who to come back to.');$('f_owner').focus();return;}
+  const fp=fileProblems(); if(fp.length){setMsg('err','Check your attachments: '+esc(fp.join('; '))+'.');return;}
+  let token='';
+  if(TURNSTILE_SITEKEY){
+    token=(window.turnstile&&turnstile.getResponse())||'';
+    if(!token){setMsg('warn','Please complete the quick verification check above the Submit button.');$('ts').scrollIntoView({behavior:'smooth',block:'center'});return;}
+  }
+  const brief=buildText(); const fd=new FormData();
+  fd.append('payload',JSON.stringify(collect())); fd.append('brief',brief);
+  [...($('f_exclfiles').files||[])].forEach(f=>fd.append('files',f,f.name));
+  if(token) fd.append('cf-turnstile-response',token);
+  busy(true);
+  try{
+    const r=await fetch('/api/submit',{method:'POST',body:fd});
+    const d=await r.json().catch(()=>({ok:false,error:'Unexpected response from the server.'}));
+    if(!r.ok||!d.ok) throw new Error(d.error||('Error '+r.status));
+    submitted=true;
+    const m=missing();
+    setMsg('ok',`<b>✓ Brief submitted.</b><br>Your reference is <b>${esc(d.ref)}</b>${d.files?` (with ${d.files} file${d.files>1?'s':''})`:''}. The Direct IT team has it and will come back to you to confirm the detail.`+
+      (m.length?`<br><br>We'll follow up on the ${m.length} item${m.length>1?'s':''} still to confirm before kick-off.`:''));
+  }catch(e){
+    setMsg('err',`<b>We couldn't submit your brief.</b><br>${esc(e.message)}<br><br>Nothing is lost: hit <b style="font-size:inherit">Copy request</b> and email it to your Direct IT account team, with any exclusion files attached.`);
+    if(window.turnstile) try{turnstile.reset();}catch(_){}
+  }finally{busy(false);}
 }
 
 /* ---------- clear / example ---------- */
@@ -842,6 +925,7 @@ function clearForm(){
     if(el.type==='checkbox'||el.type==='radio'){el.checked=false;el.indeterminate=false;} else el.value='';
   });
   $('out').value=''; $('copied').textContent=''; renderFiles();
+  submitted=false; $('submitmsg').className='submitmsg';
   refresh();
 }
 function setTicks(id,vals){$(id).querySelectorAll('input').forEach(i=>i.checked=vals.includes(i.value));}
@@ -902,6 +986,10 @@ const dz=$('dropzone');
 ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over');}));
 ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,()=>dz.classList.remove('over')));
 dz.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length){$('f_exclfiles').files=e.dataTransfer.files;renderFiles();refresh();}});
+if(TURNSTILE_SITEKEY){
+  window.onTsLoad=()=>turnstile.render('#ts',{sitekey:TURNSTILE_SITEKEY});
+  const sc=document.createElement('script'); sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTsLoad&render=explicit'; sc.async=true; document.head.appendChild(sc);
+}
 refresh();
 </script>
 </body>
