@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-AU">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fujitsu Campaign Request Form — Direct IT</title>
+<title>Fujitsu Campaign Request Form | Direct IT</title>
 <style>
   :root{
     --ink:#182233;--muted:#5c6b85;--faint:#8a97ae;--line:#dde3ec;--line2:#eef1f6;
@@ -19,7 +19,10 @@
   .hero h1{font-size:19px;margin:0;letter-spacing:-.2px}
   .hero p{margin:5px 0 0;font-size:12px;color:#b9c6dc;max-width:560px}
 
-  .bar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 22px;display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+  .bar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 22px;display:flex;justify-content:flex-end;align-items:center;gap:7px;flex-wrap:wrap}
+  .bar .status{margin-right:auto;font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:20px;cursor:pointer;border:1px solid transparent}
+  .bar .status.bad{background:var(--amberbg);color:var(--amber);border-color:#ecd8a8}
+  .bar .status.ok{background:var(--greenbg);color:var(--green);border-color:#b6ddca}
   .bar button{font-size:12px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:6px;cursor:pointer}
   .bar button:hover{background:var(--panel)}
   .bar button.primary{background:var(--brand);border-color:var(--brand);color:#fff}
@@ -29,32 +32,35 @@
   .intro{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:11px 14px;margin-bottom:15px;font-size:12px;color:var(--muted)}
   .intro b{color:var(--ink)}
 
-  .card{background:var(--white);border:1px solid var(--line);border-radius:9px;padding:15px 17px;margin-bottom:13px;box-shadow:0 1px 3px rgba(20,30,50,.05)}
-  .card h2{font-size:12px;text-transform:uppercase;letter-spacing:.7px;margin:0 0 12px;color:var(--ink);display:flex;align-items:center;gap:8px}
-  .card h2 .n{background:var(--brand);color:#fff;width:19px;height:19px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-  .card h2 .opt{margin-left:auto;font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint);font-size:10.5px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:9px;padding:15px 17px;margin-bottom:13px;box-shadow:0 1px 3px rgba(20,30,50,.05)}
+  .card h2{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;margin:0 0 12px}
+  .card h2 .n{display:flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:5px;background:var(--brand);color:#fff;font-size:11px;letter-spacing:0}
+  .card h2 .sub{font-weight:400;text-transform:none;letter-spacing:0;color:var(--faint);font-size:11px}
+  .sublbl{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--faint);margin:14px 0 8px;padding-top:12px;border-top:1px solid var(--line2)}
 
-  .row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:start;margin-bottom:10px}
-  .row label.lbl{font-size:12px;color:var(--muted);font-weight:600;padding-top:7px}
-  input[type=text],input[type=number],input[type=email],input[type=date],textarea,select{width:100%;font:inherit;font-size:12.5px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 9px;background:#fff}
+  .row{margin-bottom:10px}
+  .lbl{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 4px}
+  .lbl .req{color:var(--brand);margin-left:2px}
+  input,textarea,select{width:100%;font:inherit;font-size:12.5px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 9px;background:#fff}
   input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accentbg)}
   textarea{resize:vertical;min-height:38px;line-height:1.4}
   input[readonly]{background:#f4f6fa;color:var(--muted)}
   .hint{font-size:10.5px;color:var(--faint);margin-top:3px}
   .two{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+  .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 16px}
 
   .ticks{display:grid;gap:5px 10px}
   .ticks.four{grid-template-columns:repeat(4,1fr)}
+  .ticks.three{grid-template-columns:repeat(3,1fr)}
   .ticks.two{grid-template-columns:repeat(2,1fr)}
   .ticks label{display:flex;align-items:center;gap:7px;font-size:12px;border:1px solid var(--line);padding:6px 9px;border-radius:6px;cursor:pointer;background:#fff;font-weight:500}
   .ticks label:hover{border-color:var(--accent)}
   .ticks input{width:15px;height:15px;flex:0 0 auto}
 
-  /* tree picker */
   .tree{border:1px solid var(--line);border-radius:8px;max-height:290px;overflow:auto;background:#fff}
   .grp{border-bottom:1px solid var(--line2)}
   .grp:last-child{border-bottom:none}
-  .grp-head{display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:default}
+  .grp-head{display:flex;align-items:center;gap:8px;padding:7px 10px}
   .grp-head:hover{background:var(--panel)}
   .chev{width:16px;height:16px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;color:var(--faint);cursor:pointer;font-size:10px;transition:transform .15s;user-select:none}
   .chev.open{transform:rotate(90deg)}
@@ -64,17 +70,17 @@
   .grp-head .cnt{font-size:10px;color:var(--faint)}
   .grp-subs{display:none;padding:2px 10px 8px 34px;background:#fbfcfe}
   .grp-subs.open{display:block}
-  .grp-subs label{display:flex;align-items:center;gap:7px;font-size:11.5px;padding:3px 0;color:var(--ink);cursor:pointer;font-weight:400}
+  .grp-subs label{display:flex;align-items:center;gap:7px;font-size:11.5px;padding:3px 0;cursor:pointer;font-weight:400}
   .grp-subs input{width:14px;height:14px}
   .picker-tools{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
   .picker-tools .sel{font-size:11px;color:var(--accent);font-weight:600}
   .picker-tools button{font-size:11px;border:1px solid var(--line);background:#fff;border-radius:5px;padding:3px 9px;cursor:pointer;color:var(--muted)}
 
-  .assetflag,.budgetflag{margin-top:5px;font-size:11.5px;font-weight:600}
-  .assetflag.ok,.budgetflag.ok{color:var(--green)} .assetflag.bad,.budgetflag.bad{color:var(--red)}
+  .flag{margin-top:5px;font-size:11.5px;font-weight:600}
+  .flag.ok{color:var(--green)} .flag.bad{color:var(--red)} .flag:empty{display:none}
 
-  .talbox{margin-top:8px;border:1px dashed var(--line);border-radius:8px;padding:11px 12px;background:var(--panel);display:none}
-  .talbox.show{display:block}
+  .talbox,.displaybox{margin-top:8px;border:1px dashed var(--line);border-radius:8px;padding:11px 12px;background:var(--panel);display:none}
+  .talbox.show,.displaybox.show{display:block}
   .talbox .in{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
   .talbox .in .fg{flex:1;min-width:130px}
   .talbox .in label{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px}
@@ -86,18 +92,66 @@
   .talnote{margin-top:8px;font-size:12px;color:var(--muted);background:var(--accentbg);border:1px solid #cdddf6;border-radius:7px;padding:9px 12px;display:none}
   .talnote.show{display:block}
 
-  #out{width:100%;min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;white-space:pre;background:#0f1b2f;color:#d7e3f5;border:none;border-radius:8px;padding:12px}
-  .copied{font-size:11px;color:var(--green);margin-top:5px;height:14px}
+  .lib{display:grid;gap:8px}
+  .lib .empty{font-size:12px;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:7px;padding:10px 12px}
+  .qset{border:1px solid #cdddf6;background:var(--accentbg);border-radius:8px;overflow:hidden}
+  .qset-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;cursor:pointer}
+  .qset-head .t{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .qset-head .c{font-size:11px;color:var(--muted);font-weight:400;margin-left:6px}
+  .qset-head .r{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .qset-body{display:none;background:#fff;border-top:1px solid #cdddf6;padding:4px 12px 8px}
+  .qset.open .qset-body{display:block}
+  .qset.open .chev{transform:rotate(90deg)}
+  .libq{padding:8px 0;border-bottom:1px solid var(--line2);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
+  .libq:last-child{border-bottom:none}
+  .libq .q{font-size:12px;font-weight:600}
+  .libq ul{margin:4px 0 0;padding-left:16px;font-size:11.5px;color:var(--muted)}
+  .slot{display:flex;gap:4px;flex:0 0 auto}
+  .lib button{font-size:11px;border:1px solid var(--line);background:#fff;border-radius:5px;padding:3px 8px;cursor:pointer;color:var(--accent);font-weight:600;white-space:nowrap}
+  .lib button:hover{border-color:var(--accent)}
+  .lib button.use{background:var(--accent);border-color:var(--accent);color:#fff}
+  @media (max-width:640px){.libq{flex-direction:column;gap:6px}}
+
+  .ready ul{margin:0;padding-left:18px}
+  .ready li{font-size:12px;color:var(--amber);margin:2px 0}
+  .ready .allok{font-size:12.5px;color:var(--green);font-weight:600}
+
+  #out{width:100%;min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;white-space:pre;background:#0f1b2f;color:#d7e3f5;border:none;border-radius:7px;padding:12px}
+  #copied{font-size:11.5px;color:var(--green);font-weight:600;margin-top:6px;min-height:16px}
   .foot{font-size:10.5px;color:var(--faint);text-align:center;margin-top:14px}
 
-  @media print{
-    body{background:#fff}.bar,.foot,.noprint{display:none}
-    .hero{background:#182233 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .wrap{margin:0;max-width:100%}.card{box-shadow:none;break-inside:avoid}
-    .tree{max-height:none;overflow:visible}
-    @page{size:A4;margin:11mm}
+
+  .hide{display:none!important}
+  .types{display:grid;grid-template-columns:1fr 1fr;gap:7px 10px}
+  .tcard{display:flex;gap:9px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 11px;cursor:pointer;background:#fff}
+  .tcard:hover{border-color:var(--accent)}
+  .tcard:has(input:checked){border-color:var(--brand);background:#fff7f8;box-shadow:0 0 0 1px var(--brand)}
+  .tcard input{width:15px;height:15px;margin-top:2px;flex:0 0 auto}
+  .tcard b{display:block;font-size:12.5px}
+  .tcard small{display:block;font-size:11px;color:var(--muted);margin-top:2px;line-height:1.35}
+  .drop{display:block;border:1.5px dashed var(--line);border-radius:8px;padding:14px;text-align:center;background:var(--panel);cursor:pointer;position:relative}
+  .drop.over,.drop:hover{border-color:var(--accent);background:var(--accentbg)}
+  .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+  .drop span{display:block;font-size:12.5px;color:var(--ink)} .drop b{color:var(--accent)}
+  .drop small{display:block;font-size:11px;color:var(--faint);margin-top:3px}
+  .filelist{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .chip{font-size:11.5px;background:var(--accentbg);border:1px solid #cdddf6;color:var(--ink);border-radius:20px;padding:3px 10px}
+  .qualbox{border:1px dashed var(--line);border-radius:8px;padding:11px 12px;background:var(--panel);margin-bottom:12px}
+  select{appearance:auto}
+  @media (max-width:640px){.types{grid-template-columns:1fr}}
+  @media (max-width:640px){
+    .two,.three{grid-template-columns:1fr}
+    .ticks.four,.ticks.three{grid-template-columns:repeat(2,1fr)}
+    .bar{padding:8px 16px}
+    .hero{padding:18px 16px}
   }
-  @media(max-width:680px){.row{grid-template-columns:1fr}.row label.lbl{padding-top:0}.two,.ticks.four{grid-template-columns:1fr 1fr}}
+  @media print{
+    body{background:#fff}
+    .bar,.noprint{display:none!important}
+    .card{box-shadow:none;break-inside:avoid}
+    .tree{max-height:none}
+    .grp-subs{display:block}
+  }
 </style>
 </head>
 <body>
@@ -110,347 +164,745 @@
 </div></div>
 
 <div class="bar">
+  <span class="status bad" id="status" onclick="document.getElementById('readycard').scrollIntoView({behavior:'smooth'})">Brief incomplete</span>
   <button onclick="loadExample()">See example</button>
   <button onclick="clearForm()">Clear</button>
   <button onclick="window.print()">Save as PDF</button>
-  <button class="primary" onclick="buildText()">Copy request ▸</button>
+  <button class="primary" onclick="copyRequest()">Copy request ▸</button>
 </div>
 
 <div class="wrap">
 
   <div class="intro">
-    <b>How Direct IT builds every campaign:</b> Content Syndication + Display, profiled leads only · 3 profiling questions · Manager+ audiences · a minimum of 3–4 assets. Fill what you can — we'll confirm the detail and come back to you.
+    <b>How Direct IT builds Fujitsu campaigns:</b> <b>Profiled leads</b> are content syndication downloads, tele-verified, with 3 profiling questions, Manager+, maximum 2 per account, from a minimum of 3 to 4 assets. <b>Qualified leads</b> are tele-qualified against criteria we agree with you, maximum 1 per account. Fill what you can and we'll confirm the detail. Campaigns kick off once this brief is completed and agreed by both teams.
   </div>
 
-  <!-- 1 ABOUT -->
+  <!-- 1 -->
   <div class="card">
     <h2><span class="n">1</span> About your campaign</h2>
     <div class="two">
-      <div class="row"><label class="lbl">Your name</label><div><input type="text" id="f_owner" placeholder="Portfolio / campaign owner"></div></div>
-      <div class="row"><label class="lbl">Your email</label><div><input type="email" id="f_email" placeholder="name@fujitsu.com"></div></div>
+      <div class="row"><label class="lbl" for="f_owner">Your name<span class="req">*</span></label><input id="f_owner" type="text" placeholder="Portfolio / campaign owner"></div>
+      <div class="row"><label class="lbl" for="f_email">Your email<span class="req">*</span></label><input id="f_email" type="email" placeholder="name@fujitsu.com"></div>
     </div>
-    <div class="row"><label class="lbl">Solution area</label><div>
-      <div class="ticks four">
-        <label><input type="checkbox" class="topic" value="Data & AI">Data &amp; AI</label>
-        <label><input type="checkbox" class="topic" value="Cyber">Cyber</label>
-        <label><input type="checkbox" class="topic" value="App Modernisation">App Modernisation</label>
-        <label><input type="checkbox" class="topic" value="DX">DX</label>
-        <label><input type="checkbox" class="topic" value="Managed Services">Managed Services</label>
-        <label><input type="checkbox" class="topic" value="Cloud & Infrastructure">Cloud &amp; Infra</label>
-        <label><input type="checkbox" class="topic" value="ServiceNow">ServiceNow</label>
-        <label><input type="checkbox" class="topic" value="Hardware">Hardware</label>
+    <div class="row"><label class="lbl" for="f_name">Campaign name</label><input id="f_name" type="text" placeholder="e.g. ServiceNow FSI Q3"></div>
+
+    <div class="row">
+      <span class="lbl">Campaign type<span class="req">*</span></span>
+      <div class="types">
+        <label class="tcard"><input type="radio" name="ctype" value="dcd"><span><b>Digital: profiled leads + display</b><small>Content syndication with programmatic display. Our standard build.</small></span></label>
+        <label class="tcard"><input type="radio" name="ctype" value="dc"><span><b>Digital: profiled leads only</b><small>Content syndication with profiling questions, no display.</small></span></label>
+        <label class="tcard"><input type="radio" name="ctype" value="tq"><span><b>Tele: qualified leads</b><small>Outbound calling against agreed qualification criteria. No content syndication.</small></span></label>
+        <label class="tcard"><input type="radio" name="ctype" value="df"><span><b>Digital first: profiled + qualified</b><small>Content syndication builds engaged leads, then we tele-qualify the best into qualified leads.</small></span></label>
       </div>
-      <input type="text" id="f_topic_other" placeholder="Other / more detail on the solution area" style="margin-top:6px">
-    </div></div>
-    <div class="row"><label class="lbl">Campaign goal / offer</label><div><textarea id="f_goal" placeholder="What are we promoting and what's the call to action?"></textarea></div></div>
+    </div>
+
+    <div class="row">
+      <span class="lbl">Solution area<span class="req">*</span></span>
+      <div class="ticks four" id="g_topic"></div>
+      <input id="f_topic_other" type="text" placeholder="Other / more detail on the solution area" style="margin-top:6px">
+    </div>
+    <div class="row"><label class="lbl" for="f_goal">Campaign goal / offer<span class="req">*</span></label><textarea id="f_goal" placeholder="What are we promoting and what's the call to action?"></textarea></div>
+
+    <div class="sublbl">Objective &amp; success measure</div>
+    <div class="two">
+      <div class="row"><label class="lbl" for="f_obj">Primary objective<span class="req">*</span></label>
+        <select id="f_obj">
+          <option value="">Select...</option>
+          <option>Pipeline generation</option>
+          <option>Net-new logos</option>
+          <option>Expand into existing accounts</option>
+          <option>Assessment / offer uptake</option>
+          <option>Event or workshop attendance</option>
+          <option>Database build and nurture</option>
+          <option>Awareness and engagement</option>
+        </select>
+      </div>
+      <div class="row"><label class="lbl" for="f_follow">Who follows up the leads?<span class="req">*</span></label>
+        <select id="f_follow">
+          <option value="">Select...</option>
+          <option>Fujitsu LDR team</option>
+          <option>Fujitsu sales / account managers</option>
+          <option>Fujitsu partner</option>
+          <option>Marketing nurture</option>
+          <option>Not decided yet</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <span class="lbl">KPIs you'll measure this on<span class="req">*</span></span>
+      <div class="ticks three" id="g_kpi"></div>
+    </div>
+    <div class="two">
+      <div class="row"><label class="lbl" for="f_kpi_target">KPI target</label><input id="f_kpi_target" type="text" placeholder="e.g. 500K AUD pipeline, 8 opportunities within 90 days"></div>
+      <div class="row"><label class="lbl" for="f_report">Reporting cadence</label>
+        <select id="f_report"><option value="">Select...</option><option>Weekly</option><option>Fortnightly</option><option>Monthly</option><option>End of campaign</option></select>
+      </div>
+    </div>
+
+    <div class="sublbl">Timing</div>
+    <div class="three">
+      <div class="row"><label class="lbl" for="f_start">Preferred launch date<span class="req">*</span></label><input id="f_start" type="date"></div>
+      <div class="row"><label class="lbl" for="f_end">Campaign end date<span class="req">*</span></label><input id="f_end" type="date"></div>
+      <div class="row"><label class="lbl" for="f_dur">Flight length</label><input id="f_dur" type="text" readonly placeholder="auto"></div>
+    </div>
+    <div class="flag" id="datemsg"></div>
+    <div class="row"><label class="lbl" for="f_deadline">Any fixed deadline driving the dates?</label><input id="f_deadline" type="text" placeholder="e.g. event on 4 Dec, end of quarter, budget must be spent by..."></div>
+    <div class="hint">Allow at least 2 weeks from an agreed brief to launch for targeting sign-off, SOW, PO and setup.</div>
   </div>
 
-  <!-- 2 AUDIENCE -->
+  <!-- 2 -->
   <div class="card">
     <h2><span class="n">2</span> Who should we target?</h2>
-
-    <div class="row"><label class="lbl">Geographies</label><div><div class="ticks four">
-      <label><input type="checkbox" class="geo" value="Australia">Australia</label>
-      <label><input type="checkbox" class="geo" value="New Zealand">New Zealand</label>
-    </div></div></div>
-
-    <div class="row"><label class="lbl">Industries</label><div>
-      <div class="picker-tools"><span class="sel" id="ind_sel">None selected</span><button type="button" onclick="expandAll('industries',true)">Expand all</button></div>
+    <div class="row">
+      <span class="lbl">Geographies<span class="req">*</span></span>
+      <div class="ticks two" id="g_geo"></div>
+    </div>
+    <div class="row">
+      <div class="picker-tools"><span class="lbl" style="margin:0">Industries<span class="req">*</span></span><span><span class="sel" id="ind_sel">None selected</span> <button type="button" onclick="expandAll('industries',this)">Expand all</button></span></div>
       <div class="tree" id="industries"></div>
       <div class="hint">Tick a category for all of it, or expand to pick sub-industries.</div>
-    </div></div>
-
-    <div class="row"><label class="lbl">Company size</label><div><div class="ticks four">
-      <label><input type="checkbox" class="size" value="1–10">1–10</label>
-      <label><input type="checkbox" class="size" value="11–50">11–50</label>
-      <label><input type="checkbox" class="size" value="51–200">51–200</label>
-      <label><input type="checkbox" class="size" value="201–500">201–500</label>
-      <label><input type="checkbox" class="size" value="501–1,000">501–1,000</label>
-      <label><input type="checkbox" class="size" value="1,001–5,000">1,001–5,000</label>
-      <label><input type="checkbox" class="size" value="5,001–10,000">5,001–10,000</label>
-      <label><input type="checkbox" class="size" value="10,001+">10,001+</label>
-    </div></div></div>
-
-    <div class="row"><label class="lbl">Personas / functions</label><div>
-      <div class="picker-tools"><span class="sel" id="per_sel">None selected</span><button type="button" onclick="expandAll('personas',true)">Expand all</button></div>
+    </div>
+    <div class="row">
+      <span class="lbl">Company size</span>
+      <div class="ticks four" id="g_size"></div>
+    </div>
+    <div class="row">
+      <div class="picker-tools"><span class="lbl" style="margin:0">Personas / functions<span class="req">*</span></span><span><span class="sel" id="per_sel">None selected</span> <button type="button" onclick="expandAll('personas',this)">Expand all</button></span></div>
       <div class="tree" id="personas"></div>
-      <div class="hint">Manager+ by default — tell us below if you need a higher floor.</div>
-      <input type="text" id="f_per_other" placeholder="Specific job titles or seniority (e.g. CIO, CISO, Director+)" style="margin-top:6px">
-    </div></div>
-
-    <div class="row"><label class="lbl">Target accounts</label><div>
+      <div class="hint">Manager+ by default. Tell us below if you need a higher floor.</div>
+      <input id="f_per_other" type="text" placeholder="Specific job titles or seniority (e.g. CIO, CISO, Director+)" style="margin-top:6px">
+    </div>
+    <div class="row">
+      <span class="lbl">Target accounts<span class="req">*</span></span>
       <div class="ticks two">
-        <label><input type="radio" name="tal" value="Yes" onchange="talMode()">Yes — I have a target account list (TAL)</label>
-        <label><input type="radio" name="tal" value="No" onchange="talMode()">No — target by the profile above</label>
+        <label><input type="radio" name="tal" value="Yes"> Yes, I have a target account list (TAL)</label>
+        <label><input type="radio" name="tal" value="No"> No, target by the profile above</label>
       </div>
       <div class="talbox" id="talbox">
         <div class="in">
-          <div class="fg"><label>How many accounts on your list?</label><input type="number" id="c_acc" oninput="talCheck()" placeholder="e.g. 500"></div>
-          <div class="fg"><label>Leads you're after</label><input type="number" id="c_leads" oninput="talCheck()" placeholder="e.g. 71"></div>
+          <div class="fg"><label for="c_acc">How many accounts on your list?</label><input id="c_acc" type="number" min="0" placeholder="e.g. 500"></div>
+          <div class="fg"><label for="c_leads">Leads you're after</label><input id="c_leads" type="number" min="0" placeholder="e.g. 71"></div>
         </div>
-        <div class="talverdict" id="talverdict"><span class="ic">•</span><span id="talverdict_t"></span></div>
+        <div class="row" style="margin:9px 0 0"><label class="lbl" for="f_tallink">TAL file link<span class="req">*</span></label><input id="f_tallink" type="text" placeholder="SharePoint / Drive link to the account list (.xlsx or .csv, company name + domain)"></div>
+        <div class="talverdict" id="talverdict"><span class="ic" id="talverdict_i"></span><span id="talverdict_t"></span></div>
       </div>
-      <div class="talnote" id="talnote">No problem — we'll assess our reach against your targeting criteria and confirm the achievable volume before we build.</div>
-    </div></div>
-
-    <div class="row"><label class="lbl">Exclusions</label><div><textarea id="f_excl" placeholder="Accounts or types to exclude (e.g. Big 4 banks; MSPs, IT resellers/distributors, hardware/software vendors, systems integrators)"></textarea></div></div>
-  </div>
-
-  <!-- 3 CONTENT -->
-  <div class="card">
-    <h2><span class="n">3</span> Content &amp; questions</h2>
-    <div class="two">
-      <div class="row"><label class="lbl">Number of assets</label><div><input type="number" id="f_assets" oninput="assetCheck()" placeholder="min 3–4"><div id="assetmsg" class="assetflag"></div></div></div>
-      <div class="row"><label class="lbl">Assets link</label><div><input type="text" id="f_assetlink" placeholder="Drive / SharePoint link"><div class="hint">More can follow — we just need 3–4 to start testing.</div></div></div>
-    </div>
-    <div class="row"><label class="lbl">Profiling Q1</label><div><textarea id="f_q1" placeholder="A question to profile the lead (no wrong answers — these capture intent, not screen people out)"></textarea></div></div>
-    <div class="row"><label class="lbl">Profiling Q2</label><div><textarea id="f_q2"></textarea></div></div>
-    <div class="row"><label class="lbl">Profiling Q3</label><div><textarea id="f_q3"></textarea></div></div>
-  </div>
-
-  <!-- 4 VOLUMES -->
-  <div class="card">
-    <h2><span class="n">4</span> Volumes &amp; budget</h2>
-    <div class="two">
-      <div class="row"><label class="lbl">CS leads wanted</label><div><input type="number" id="f_csleads" oninput="commCalc()" placeholder="e.g. 71"></div></div>
-      <div class="row"><label class="lbl">Cost per lead</label><div><input type="text" value="$105 AUD" readonly></div></div>
-      <div class="row"><label class="lbl">CS investment</label><div><input type="text" id="f_csval" readonly placeholder="auto"></div></div>
-      <div class="row"><label class="lbl">Display CPM</label><div><input type="text" value="$28 AUD" readonly></div></div>
-      <div class="row"><label class="lbl">Display budget</label><div><input type="number" id="f_prog" oninput="commCalc()" placeholder="min $5,000 AUD"><div id="budgetmsg" class="budgetflag"></div></div></div>
-      <div class="row"><label class="lbl">Impressions</label><div><input type="text" id="f_imp" readonly placeholder="auto"></div></div>
+      <div class="talnote" id="talnote">No problem. We'll assess our reach against your targeting criteria and confirm the achievable volume before we build.</div>
     </div>
   </div>
 
-  <!-- OUTPUT -->
+  <!-- 3 -->
+  <div class="card">
+    <h2><span class="n">3</span> Exclusions</h2>
+    <div class="row">
+      <span class="lbl">Standard exclusions</span>
+      <div class="ticks three" id="g_excl"></div>
+    </div>
+    <div class="row">
+      <span class="lbl">Attach exclusion / suppression lists</span>
+      <label class="drop" id="dropzone">
+        <input type="file" id="f_exclfiles" multiple accept=".xlsx,.xls,.csv,.txt">
+        <span><b>Choose files</b> or drag them here</span>
+        <small>Existing customers, open opportunities, competitors, recently contacted accounts (.xlsx or .csv)</small>
+      </label>
+      <div class="filelist" id="filelist"></div>
+      <div class="hint">Files stay on your device. Attach the same files to your email to Direct IT: they're listed in the request so nothing gets missed. Or share a link instead:</div>
+      <input id="f_excllink" type="text" placeholder="SharePoint / Drive link to exclusion lists" style="margin-top:6px">
+    </div>
+    <div class="row"><label class="lbl" for="f_excl">Additional exclusions</label><textarea id="f_excl" rows="3" placeholder="Anything else to exclude: named accounts or domains (e.g. Big 4 banks: CBA, Westpac, NAB, ANZ), job titles, sub-industries, states or regions"></textarea></div>
+    <div class="row" id="prio_row">
+      <span class="lbl">If an account is on both your TAL and an exclusion list</span>
+      <div class="ticks two">
+        <label><input type="radio" name="prio" value="Exclude it"> Exclude it (recommended)</label>
+        <label><input type="radio" name="prio" value="Keep it on the TAL"> Keep it on the TAL</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card">
+    <h2><span class="n">4</span> Content &amp; questions</h2>
+
+    <div data-types="dcd dc df">
+      <div class="two">
+        <div class="row"><label class="lbl" for="f_assets">Number of assets<span class="req">*</span></label><input id="f_assets" type="number" min="0" placeholder="min 3 to 4"><div class="flag" id="assetmsg"></div></div>
+        <div class="row"><label class="lbl" for="f_assetlink">Assets link<span class="req">*</span></label><input id="f_assetlink" type="text" placeholder="Drive / SharePoint link"></div>
+      </div>
+      <div class="hint" style="margin:-4px 0 10px">More can follow. We just need 3 to 4 to start testing.</div>
+    </div>
+
+    <div data-types="tq">
+      <div class="row"><label class="lbl" for="f_collat">Offer and supporting collateral<span class="req">*</span></label><input id="f_collat" type="text" placeholder="Link to offer sheet, case studies, battlecard or talk track"></div>
+    </div>
+
+    <div data-types="tq df" class="qualbox">
+      <div class="sublbl" style="margin-top:4px;border-top:none;padding-top:0">Qualification criteria for a qualified lead</div>
+      <div class="row">
+        <div class="ticks two" id="g_qual"></div>
+      </div>
+      <div class="two">
+        <div class="row"><label class="lbl" for="f_qtime">Timeline needed to qualify</label>
+          <select id="f_qtime"><option value="">Select...</option><option>Within 3 months</option><option>Within 6 months</option><option>Within 12 months</option><option>Any defined timeline</option></select>
+        </div>
+        <div class="row"><label class="lbl" for="f_qdeliver">What does a qualified lead hand over as?</label>
+          <select id="f_qdeliver"><option value="">Select...</option><option>Qualified lead notes for the LDR / AM to call</option><option>Meeting booked with Fujitsu</option><option>Assessment or workshop booked</option></select>
+        </div>
+      </div>
+      <div class="row"><label class="lbl" for="f_qother">Other qualification criteria</label><input id="f_qother" type="text" placeholder="e.g. must be evaluating vendors, current contract ending, minimum project size"></div>
+      <div class="row"><label class="lbl" for="f_sme">SME for agent enablement</label><input id="f_sme" type="text" placeholder="Fujitsu subject matter expert who can brief our callers before launch"></div>
+    </div>
+
+    <div class="row noprint">
+      <div class="picker-tools"><span class="lbl" style="margin:0">Previously used profiling questions</span><button type="button" id="lib_toggle" onclick="toggleLib()">Show all solutions</button></div>
+      <div class="lib" id="lib"></div>
+      <div class="hint">Pick a proven set, mix and match, or write your own. Everything drops into Q1 to Q3 below and can be edited.</div>
+    </div>
+    <div class="row"><label class="lbl" for="f_q1"><span class="qlabel">Profiling</span> Q1<span class="req qreq">*</span></label><textarea id="f_q1" rows="6" placeholder="A question to profile the lead, with answer options (no wrong answers: these capture intent, not screen people out)"></textarea></div>
+    <div class="row"><label class="lbl" for="f_q2"><span class="qlabel">Profiling</span> Q2<span class="req qreq">*</span></label><textarea id="f_q2" rows="6" placeholder="Question, then one answer option per line"></textarea></div>
+    <div class="row"><label class="lbl" for="f_q3"><span class="qlabel">Profiling</span> Q3<span class="req qreq">*</span></label><textarea id="f_q3" rows="6" placeholder="e.g. Which best describes your role in the decision?"></textarea></div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card" data-types="dcd df">
+    <h2><span class="n">5</span> Display creative</h2>
+    <div class="row" data-types="df">
+      <span class="lbl">Add programmatic display?<span class="req">*</span></span>
+      <div class="ticks two">
+        <label><input type="radio" name="disp" value="Yes"> Yes (recommended)</label>
+        <label><input type="radio" name="disp" value="No"> No</label>
+      </div>
+    </div>
+    <div class="displaybox" id="displaybox">
+      <div class="row">
+        <span class="lbl">Who supplies the banners?<span class="req">*</span></span>
+        <div class="ticks two">
+          <label><input type="radio" name="bansrc" value="Fujitsu (final artwork)"> Fujitsu supplies final artwork</label>
+          <label><input type="radio" name="bansrc" value="Direct IT to design from Fujitsu brand assets"> Direct IT to design (from brand assets)</label>
+        </div>
+      </div>
+      <div class="row">
+        <span class="lbl">Banner sizes</span>
+        <div class="ticks three" id="g_ban"></div>
+        <div class="hint">300x250, 728x90 and 160x600 cover most inventory. Static JPG/PNG or HTML5, under 150KB each.</div>
+      </div>
+      <div class="two">
+        <div class="row"><label class="lbl" for="f_banlink">Banner / brand assets link</label><input id="f_banlink" type="text" placeholder="Drive / SharePoint link"></div>
+        <div class="row"><label class="lbl" for="f_lp">Click-through landing page<span class="req">*</span></label><input id="f_lp" type="text" placeholder="https://"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card">
+    <h2><span class="n" id="n_vol">6</span> Volumes &amp; budget</h2>
+    <div class="three" data-types="dcd dc df">
+      <div class="row"><label class="lbl" for="f_csleads">Profiled leads wanted<span class="req">*</span></label><input id="f_csleads" type="number" min="0" placeholder="e.g. 71"></div>
+      <div class="row"><label class="lbl">Cost per profiled lead</label><input type="text" readonly value="$105 AUD"></div>
+      <div class="row"><label class="lbl" for="f_csval">Profiled investment</label><input id="f_csval" type="text" readonly placeholder="auto"></div>
+    </div>
+    <div class="three" data-types="tq df">
+      <div class="row"><label class="lbl" for="f_qleads">Qualified leads wanted<span class="req">*</span></label><input id="f_qleads" type="number" min="0" placeholder="e.g. 30"></div>
+      <div class="row"><label class="lbl">Cost per qualified lead</label><input type="text" readonly value="$423 AUD"></div>
+      <div class="row"><label class="lbl" for="f_qval">Qualified investment</label><input id="f_qval" type="text" readonly placeholder="auto"></div>
+    </div>
+    <div class="three" id="dispcomm">
+      <div class="row"><label class="lbl">Display CPM</label><input type="text" readonly value="$28 AUD"></div>
+      <div class="row"><label class="lbl" for="f_prog">Display budget (AUD)</label><input id="f_prog" type="number" min="0" placeholder="min $5,000 AUD"><div class="flag" id="budgetmsg"></div></div>
+      <div class="row"><label class="lbl" for="f_imp">Impressions</label><input id="f_imp" type="text" readonly placeholder="auto"></div>
+    </div>
+    <div class="row"><label class="lbl" for="f_total">Total investment</label><input id="f_total" type="text" readonly placeholder="auto"></div>
+    <div class="two">
+      <div class="row"><label class="lbl" for="f_po">Budget owner / PO approver<span class="req">*</span></label><input id="f_po" type="text" placeholder="Name and email of who raises the PO"></div>
+      <div class="row"><label class="lbl" for="f_cc">Cost centre / budget code</label><input id="f_cc" type="text" placeholder="If known"></div>
+    </div>
+    <div class="hint" id="volhint"></div>
+  </div>
+
+  <!-- readiness -->
+  <div class="card noprint ready" id="readycard">
+    <h2><span class="n">✓</span> Brief readiness</h2>
+    <div id="readylist"></div>
+  </div>
+
   <div class="card noprint">
-    <h2><span class="n">▸</span> Request as text <span class="opt">for the email body</span></h2>
-    <textarea id="out" readonly placeholder="Fill the form, then hit &quot;Copy request&quot; — the completed request appears here, ready to paste into an email to Direct IT."></textarea>
-    <div class="copied" id="copied"></div>
+    <h2><span class="n">▸</span> Request as text <span class="sub">for the email body</span></h2>
+    <textarea id="out" readonly placeholder='Fill the form, then hit "Copy request". The completed request appears here, ready to paste into an email to Direct IT.'></textarea>
+    <div id="copied"></div>
   </div>
 
-  <div class="foot">Direct IT — Fujitsu campaign request. We build to a consistent standard and confirm deliverability before launch.</div>
+  <div class="foot">Direct IT · Fujitsu campaign request. We build to a consistent standard and confirm deliverability before launch.</div>
 </div>
 
 <script>
-/* ---------- taxonomy ---------- */
+const TOPICS=["Data & AI","Cyber","App Modernisation","DX","Managed Services","Cloud & Infrastructure","ServiceNow","Hardware","Professional Services"];
+const GEOS=["Australia","New Zealand"];
+const SIZES=["1–10","11–50","51–200","201–500","501–1,000","1,001–5,000","5,001–10,000","10,001+"];
+const BANNERS=["300x250","728x90","160x600","300x600","320x50","970x250"];
+const CPL=105, CPQL=423, CPM=28, MIN_DISPLAY=5000, ACC_PER_LEAD=7;
+const KPIS=["Pipeline value (AUD)","Opportunities / SQLs created","Meetings or assessments booked","Lead to opportunity conversion","Leads delivered","Event registrations / attendance","Engagement (impressions, CTR)"];
+const EXCLS=["Existing customers for this solution","Open opportunities / active deals","Competitors","MSPs, resellers and distributors","Hardware and software vendors","Systems integrators","Government","Partner-owned accounts","Leads from recent Fujitsu campaigns"];
+const QUALS=["Budget identified or being allocated","Authority: decision maker or key influencer","Need: active project or defined pain","Open to a follow-up conversation with Fujitsu"];
+
 const INDUSTRIES={
- "Agriculture & Natural Resources":["Farming & Crop Production","Ranching & Livestock","Forestry & Logging","Fisheries & Aquaculture","Mining & Metals","Agricultural Technology","Horticulture & Landscaping","Animal Feed & Nutrition"],
- "Education":["Higher Education","K-12 Education","E-Learning & EdTech","Vocational & Technical Training","Corporate Training & Development","Education Administration","Libraries & Archives","Research & Think Tanks"],
- "Energy & Utilities":["Oil & Gas Exploration & Production","Renewable Energy & Clean Tech","Electric Power Generation","Utilities - Electric, Gas & Water","Nuclear Energy","Energy Storage & Batteries","Mining & Extraction Services","Environmental Services & Waste Management"],
- "Financial Services":["Banking","Insurance","Investment Management","Venture Capital & Private Equity","Accounting & Tax","Financial Planning & Advisory","Capital Markets","Payments & FinTech","Lending & Mortgages","Wealth Management"],
- "Government & Non-Profit":["Federal Government","State & Local Government","Military & Defense","Law Enforcement & Public Safety","Non-Profit & Charitable Organizations","International Affairs & Development","Political Organizations","Civic & Social Advocacy"],
- "Healthcare":["Hospitals & Health Systems","Pharmaceuticals","Biotechnology","Medical Devices & Equipment","Health Insurance","Mental Health & Wellness","Ambulatory Care & Home Health","Clinical Research & Trials","Veterinary Services","Public Health"],
- "Hospitality & Travel":["Hotels & Accommodation","Restaurants & Food Services","Travel Agencies & Tour Operators","Cruise & Leisure Travel","Amusement Parks & Recreation","Catering & Event Services","Casino & Gaming","Bars & Nightlife"],
- "Life Sciences":["Genomics & Proteomics","Laboratory Services","Contract Research Organizations","Diagnostics & Testing","Bioinformatics","Nutraceuticals & Supplements","Regulatory Affairs"],
- "Manufacturing":["Automotive Manufacturing","Aerospace & Defense Manufacturing","Electronics Manufacturing","Industrial Machinery & Equipment","Chemical Manufacturing","Plastics & Packaging","Textiles & Apparel Manufacturing","Food & Beverage Manufacturing","Metal & Steel Manufacturing","Glass, Ceramics & Concrete"],
- "Media & Entertainment":["Broadcasting & Streaming","Publishing & Journalism","Film & Television Production","Music & Recording","Gaming & Interactive Media","Advertising & Marketing","Public Relations","Graphic Design & Visual Arts","Photography","Events & Live Entertainment"],
- "Professional Services":["Management Consulting","Legal Services","Staffing & Recruiting","Human Resources Services","Market Research & Analysis","Translation & Localization","Business Process Outsourcing","Strategy & Operations Consulting","Executive Search","Environmental Consulting"],
- "Real Estate & Construction":["Commercial Real Estate","Residential Real Estate","Construction & Engineering","Architecture & Planning","Property Management","Real Estate Investment & Trusts","Interior Design","Civil Engineering","Building Materials & Supplies"],
- "Retail & Consumer":["Retail - General","E-Commerce","Consumer Goods","Food & Beverage Retail","Luxury Goods & Jewelry","Sporting Goods & Outdoor","Fashion & Apparel Retail","Consumer Electronics Retail","Home Improvement & Furnishings","Personal Care & Beauty"],
- "Technology & IT":["Software Development","Hardware & Networking","IT Services & Consulting","Telecommunications","Internet & Web Services","Cybersecurity","Cloud Computing","Artificial Intelligence & Machine Learning","Semiconductors","Data Analytics & Big Data","Computer Games","Embedded Systems & IoT"],
- "Transportation & Logistics":["Airlines & Aviation","Shipping & Maritime","Trucking & Ground Freight","Rail Transportation","Logistics & Supply Chain","Warehousing & Storage","Public Transit & Urban Mobility","Courier & Delivery Services","Autonomous Vehicles & Mobility Tech"]
+"Agriculture & Natural Resources":["Farming & Crop Production","Ranching & Livestock","Forestry & Logging","Fisheries & Aquaculture","Mining & Metals","Agricultural Technology","Horticulture & Landscaping","Animal Feed & Nutrition"],
+"Education":["Higher Education","K-12 Education","E-Learning & EdTech","Vocational & Technical Training","Corporate Training & Development","Education Administration","Libraries & Archives","Research & Think Tanks"],
+"Energy & Utilities":["Oil & Gas Exploration & Production","Renewable Energy & Clean Tech","Electric Power Generation","Utilities - Electric, Gas & Water","Nuclear Energy","Energy Storage & Batteries","Mining & Extraction Services","Environmental Services & Waste Management"],
+"Financial Services":["Banking","Insurance","Investment Management","Venture Capital & Private Equity","Accounting & Tax","Financial Planning & Advisory","Capital Markets","Payments & FinTech","Lending & Mortgages","Wealth Management"],
+"Government & Non-Profit":["Federal Government","State & Local Government","Military & Defense","Law Enforcement & Public Safety","Non-Profit & Charitable Organizations","International Affairs & Development","Political Organizations","Civic & Social Advocacy"],
+"Healthcare":["Hospitals & Health Systems","Pharmaceuticals","Biotechnology","Medical Devices & Equipment","Health Insurance","Mental Health & Wellness","Ambulatory Care & Home Health","Clinical Research & Trials","Veterinary Services","Public Health"],
+"Hospitality & Travel":["Hotels & Accommodation","Restaurants & Food Services","Travel Agencies & Tour Operators","Cruise & Leisure Travel","Amusement Parks & Recreation","Catering & Event Services","Casino & Gaming","Bars & Nightlife"],
+"Life Sciences":["Genomics & Proteomics","Laboratory Services","Contract Research Organizations","Diagnostics & Testing","Bioinformatics","Nutraceuticals & Supplements","Regulatory Affairs"],
+"Manufacturing":["Automotive Manufacturing","Aerospace & Defense Manufacturing","Electronics Manufacturing","Industrial Machinery & Equipment","Chemical Manufacturing","Plastics & Packaging","Textiles & Apparel Manufacturing","Food & Beverage Manufacturing","Metal & Steel Manufacturing","Glass, Ceramics & Concrete"],
+"Media & Entertainment":["Broadcasting & Streaming","Publishing & Journalism","Film & Television Production","Music & Recording","Gaming & Interactive Media","Advertising & Marketing","Public Relations","Graphic Design & Visual Arts","Photography","Events & Live Entertainment"],
+"Professional Services":["Management Consulting","Legal Services","Staffing & Recruiting","Human Resources Services","Market Research & Analysis","Translation & Localization","Business Process Outsourcing","Strategy & Operations Consulting","Executive Search","Environmental Consulting"],
+"Real Estate & Construction":["Commercial Real Estate","Residential Real Estate","Construction & Engineering","Architecture & Planning","Property Management","Real Estate Investment & Trusts","Interior Design","Civil Engineering","Building Materials & Supplies"],
+"Retail & Consumer":["Retail - General","E-Commerce","Consumer Goods","Food & Beverage Retail","Luxury Goods & Jewelry","Sporting Goods & Outdoor","Fashion & Apparel Retail","Consumer Electronics Retail","Home Improvement & Furnishings","Personal Care & Beauty"],
+"Technology & IT":["Software Development","Hardware & Networking","IT Services & Consulting","Telecommunications","Internet & Web Services","Cybersecurity","Cloud Computing","Artificial Intelligence & Machine Learning","Semiconductors","Data Analytics & Big Data","Computer Games","Embedded Systems & IoT"],
+"Transportation & Logistics":["Airlines & Aviation","Shipping & Maritime","Trucking & Ground Freight","Rail Transportation","Logistics & Supply Chain","Warehousing & Storage","Public Transit & Urban Mobility","Courier & Delivery Services","Autonomous Vehicles & Mobility Tech"]
 };
 const PERSONAS={
- "IT & Technology":["Information Technology / Technology Leadership","IT Generalist","IT Infrastructure","IT Operations & Support","Cloud Engineering","DevOps, SRE & Platform Engineering","Networking & Connectivity","Applications & Software Development","Data, Analytics & AI","Cybersecurity, Risk & Compliance (IT)","Enterprise / Solution Architecture","Business Applications / ERP / CRM"],
- "Product & Engineering":["Product Management & Engineering (Technical)","R&D / Engineering / Manufacturing"],
- "Business Operations":["Operations / Supply Chain / Logistics","Project, Program & Change Management (IT)","Administration / Office Management","Facilities / Workplace / Real Estate"],
- "Sales":[],
- "Marketing":["Marketing & Communications","Digital / eCommerce & Marketing Technology"],
- "Customer":[],
- "Finance & Accounting":[],
- "Human Resources":[],
- "Legal & Compliance":[],
- "Procurement":[],
- "Consulting & Professional Services":["Consulting / Advisory / Professional Services","Enablement, Training & Education"],
- "Executive Leadership":[],
- "Business Partner / Advisory":[]
+"Business Operations":["Operations / Supply Chain / Logistics","Project, Program & Change Management (IT)","Administration / Office Management","Facilities / Workplace / Real Estate"],
+"Business Partner / Advisory":[],
+"Consulting & Professional Services":["Consulting / Advisory / Professional Services","Enablement, Training & Education"],
+"Customer":[],
+"Executive Leadership":[],
+"Finance & Accounting":[],
+"Human Resources":[],
+"IT & Technology":["Information Technology / Technology Leadership","IT Generalist","IT Infrastructure","IT Operations & Support","Cloud Engineering","DevOps, SRE & Platform Engineering","Networking & Connectivity","Applications & Software Development","Data, Analytics & AI","Cybersecurity, Risk & Compliance (IT)","Enterprise / Solution Architecture","Business Applications / ERP / CRM"],
+"Legal & Compliance":[],
+"Marketing":["Marketing & Communications","Digital / eCommerce & Marketing Technology"],
+"Procurement":[],
+"Product & Engineering":["Product Management & Engineering (Technical)","R&D / Engineering / Manufacturing"],
+"Sales":[]
 };
 
-/* ---------- tree builder ---------- */
-function buildTree(containerId,data,selCb){
-  const box=document.getElementById(containerId); box.innerHTML='';
-  Object.keys(data).forEach((main,gi)=>{
-    const subs=data[main];
+/* Previously used profiling questions. "areas" maps each set to the solution areas it shows under. */
+const QLIB=[
+  {name:"Cyber",ctx:"Cyber maturity",areas:["Cyber"],qs:[
+    {q:"Do you have clear visibility of your cybersecurity gaps and a prioritised plan to address them?",a:["Yes - clear visibility and an active roadmap","Partial visibility, but no prioritised plan","Limited visibility into gaps","No formal visibility or plan"]},
+    {q:"Are you required to report on cybersecurity maturity to internal stakeholders, regulators, or the board?",a:["Yes - regularly (e.g. board / regulatory reporting)","Occasionally / ad hoc reporting","Not currently, but likely in future","No reporting requirement"]},
+    {q:"How confident are you that your current security tools are effectively detecting real threats (not just generating alerts)?",a:["Very confident - strong detection capability and validation in place","Somewhat confident - tools in place but effectiveness unclear","Not confident - concerned about missed threats","Unsure"]}
+  ]},
+  {name:"Wayfinder",ctx:"Government: sovereignty, sovereign AI and cyber resilience",areas:["Data & AI","Cyber"],qs:[
+    {q:"Which of the following best describes your current data sovereignty challenges? (Select all that apply)",a:["Unclear control over where sensitive or classified data is stored or processed","Difficulty meeting sovereignty requirements while adopting AI and cloud services","Dependence on offshore platforms or vendors for critical data or workloads","Fragmented governance across agencies or jurisdictions","Concern about vendor lock in limiting future policy or technology choices","Other (please specify)"]},
+    {q:"How prepared is your agency to deploy AI within sovereign and regulatory constraints?",a:["Early stage - still assessing risks, policy implications and guardrails","Piloting AI with strict controls and approvals","Scaling AI with defined sovereignty, security and governance models","Mature - AI is operationalised with clear accountability and compliance oversight"]},
+    {q:"When a cyber incident occurs, which outcomes matter most for your organisation? (Select up to 3)",a:["Maintaining essential public services without interruption","Rapid recovery of systems and data","Protecting citizen trust and confidence","Meeting regulatory, audit and reporting obligations","Clear accountability across agency leadership and partners","Improving whole of government resilience and coordination"]}
+  ]},
+  {name:"ServiceNow",ctx:"Public sector service delivery",areas:["ServiceNow"],qs:[
+    {q:"What is your top priority for improving public sector service delivery?",a:["Enhancing citizen engagement and experience","Streamlining internal operations across departments","Strengthening security and compliance","Increasing visibility across service performance"]},
+    {q:"What is the biggest challenge your organisation faces in delivering efficient and compliant services?",a:["Legacy systems and integration complexity","Siloed processes across departments","Meeting regulatory and compliance requirements","Limited real-time visibility into operations"]},
+    {q:"How would you describe your organisation's current approach to digital service delivery platforms (e.g. ServiceNow)?",a:["Exploring options","Implemented but not fully optimised","Scaling across multiple departments","Well established and optimised"]}
+  ]},
+  {name:"Data & AI",ctx:"AI outcomes and adoption",areas:["Data & AI"],qs:[
+    {q:"What outcome are you looking to achieve with AI in your organisation?",a:["Improve safety across operations, workforce, or public services","Enhance decision-making with data and real-time insights","Increase productivity by automating manual processes","Strengthen risk detection and proactive threat prevention","Explore AI capabilities and potential use cases"]},
+    {q:"How would you describe your organisation's current use of AI?",a:["Not currently using AI","Exploring or running initial pilots","Implementing AI across specific functions","Scaling and integrating AI across the organisation"]},
+    {q:"What is the biggest driver for adopting AI in your organisation today?",a:["Need to improve safety and reduce risk exposure","Need to operate more efficiently with limited resources","Demand for faster, data-driven decision-making","Requirement to modernise services and improve user experience","Need to respond to increasing regulatory or security pressures"]}
+  ]},
+  {name:"Cloud & Infrastructure",ctx:"Observability (Melbourne event with Dynatrace)",areas:["Cloud & Infrastructure","Managed Services"],qs:[
+    {q:"What is your biggest challenge in monitoring the performance & health of your cloud and infrastructure environment?",a:["Limited visibility across hybrid and multi-cloud environments","Too many disconnected monitoring tools and dashboards","Slow detection and resolution of incidents","Difficulty linking IT performance to business outcomes","Cloud cost and consumption not tied back to infrastructure decisions"]},
+    {q:"How mature is your organisation's observability capability today?",a:["Siloed monitoring, tool by tool, with no central view","Basic infrastructure and application monitoring in place","Consolidated monitoring across most of the estate","Full-stack observability with logs, metrics and traces correlated","AI-assisted observability with automated detection and remediation"]},
+    {q:"Which observability or infrastructure priority is highest for your organisation over the next 12 months?",a:["Consolidating monitoring tools onto a single platform","Improving application performance and end user digital experience","Reducing downtime and incident volume through automation","Gaining control of cloud cost and consumption","Preparing infrastructure to support AI workloads"]}
+  ]}
+];
+let libAll=false, libKey=null;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmt(n){return Math.round(n).toLocaleString('en-AU');}
+
+/* ---------- builders ---------- */
+function buildTicks(id,list){
+  $(id).innerHTML=list.map(v=>`<label><input type="checkbox" value="${esc(v)}"> ${esc(v)}</label>`).join('');
+}
+function buildTree(id,data){
+  const box=$(id); box.innerHTML='';
+  Object.entries(data).forEach(([main,subs])=>{
     const grp=document.createElement('div'); grp.className='grp';
     const head=document.createElement('div'); head.className='grp-head';
     const chev=document.createElement('span'); chev.className='chev'+(subs.length?'':' none'); chev.textContent='▶';
-    const mid=containerId+'_m'+gi;
-    const mcb=document.createElement('input'); mcb.type='checkbox'; mcb.id=mid; mcb.className='m';
-    const lab=document.createElement('label'); lab.setAttribute('for',mid); lab.textContent=main+(subs.length?'':'');
-    const cnt=document.createElement('span'); cnt.className='cnt'; if(subs.length)cnt.textContent=subs.length;
-    head.append(chev,mcb,lab,cnt);
-    const subsWrap=document.createElement('div'); subsWrap.className='grp-subs';
-    subs.forEach((s,si)=>{
-      const l=document.createElement('label');
-      const c=document.createElement('input'); c.type='checkbox'; c.className='s'; c.value=s;
-      const t=document.createElement('span'); t.textContent=s;
-      l.append(c,t); subsWrap.appendChild(l);
-      c.addEventListener('change',()=>{syncMain(mcb,subsWrap);selCb();});
-    });
-    grp.append(head,subsWrap);
-    box.appendChild(grp);
+    const mid='t_'+id+'_'+Math.random().toString(36).slice(2,8);
+    const mcb=document.createElement('input'); mcb.type='checkbox'; mcb.id=mid; mcb.dataset.main=main;
+    const lab=document.createElement('label'); lab.htmlFor=mid; lab.textContent=main;
+    const cnt=document.createElement('span'); cnt.className='cnt'; cnt.textContent=subs.length?subs.length+' sub':'';
+    head.append(chev,mcb,lab,cnt); grp.append(head);
     if(subs.length){
-      chev.addEventListener('click',()=>{chev.classList.toggle('open');subsWrap.classList.toggle('open');});
-      lab.addEventListener('click',()=>{}); // label toggles checkbox by default
+      const sw=document.createElement('div'); sw.className='grp-subs';
+      subs.forEach(s=>{
+        const l=document.createElement('label');
+        const c=document.createElement('input'); c.type='checkbox'; c.value=s; c.dataset.sub='1';
+        c.addEventListener('change',()=>{syncMain(grp);refresh();});
+        l.append(c,document.createTextNode(s)); sw.append(l);
+      });
+      grp.append(sw);
+      chev.addEventListener('click',()=>{chev.classList.toggle('open');sw.classList.toggle('open');});
     }
-    mcb.dataset.main=main;
     mcb.addEventListener('change',()=>{
-      subsWrap.querySelectorAll('.s').forEach(x=>x.checked=mcb.checked);
-      mcb.indeterminate=false; selCb();
+      grp.querySelectorAll('input[data-sub]').forEach(c=>c.checked=mcb.checked);
+      mcb.indeterminate=false; refresh();
     });
+    box.append(grp);
   });
 }
-function syncMain(mcb,subsWrap){
-  const subs=[...subsWrap.querySelectorAll('.s')];
-  const on=subs.filter(x=>x.checked).length;
-  mcb.checked = on===subs.length && subs.length>0;
-  mcb.indeterminate = on>0 && on<subs.length;
+function syncMain(grp){
+  const subs=[...grp.querySelectorAll('input[data-sub]')]; const on=subs.filter(c=>c.checked).length;
+  const m=grp.querySelector('input[data-main]');
+  m.checked=on===subs.length&&on>0; m.indeterminate=on>0&&on<subs.length;
 }
-function expandAll(id,open){document.querySelectorAll('#'+id+' .chev:not(.none)').forEach(c=>{c.classList.toggle('open',open);});document.querySelectorAll('#'+id+' .grp-subs').forEach(s=>s.classList.toggle('open',open));}
-
-function getTree(id,data){
-  const out=[]; const box=document.getElementById(id);
-  box.querySelectorAll('.grp').forEach(grp=>{
-    const mcb=grp.querySelector('.m'); const main=mcb.dataset.main;
-    const subs=[...grp.querySelectorAll('.s')];
-    if(subs.length===0){ if(mcb.checked) out.push(main); return; }
-    if(mcb.checked && !mcb.indeterminate){ out.push(main+' (all)'); }
-    else { subs.filter(x=>x.checked).forEach(x=>out.push(x.value)); }
+function expandAll(id,btn){
+  const open=btn.textContent==='Expand all';
+  $(id).querySelectorAll('.grp-subs').forEach(s=>s.classList.toggle('open',open));
+  $(id).querySelectorAll('.chev:not(.none)').forEach(c=>c.classList.toggle('open',open));
+  btn.textContent=open?'Collapse all':'Expand all';
+}
+function getTree(id){
+  const out=[];
+  $(id).querySelectorAll('.grp').forEach(g=>{
+    const m=g.querySelector('input[data-main]'); const subs=[...g.querySelectorAll('input[data-sub]')];
+    if(!subs.length){ if(m.checked) out.push(m.dataset.main); return; }
+    const on=subs.filter(c=>c.checked).map(c=>c.value);
+    if(on.length===subs.length) out.push(m.dataset.main+' (all)');
+    else out.push(...on);
   });
   return out;
 }
-function countTree(id){return getTree(id, id==='industries'?INDUSTRIES:PERSONAS).length;}
-function indSel(){const n=countTree('industries');document.getElementById('ind_sel').textContent=n?n+' selected':'None selected';}
-function perSel(){const n=countTree('personas');document.getElementById('per_sel').textContent=n?n+' selected':'None selected';}
+function countTree(id){
+  let n=0;
+  $(id).querySelectorAll('.grp').forEach(g=>{
+    const subs=[...g.querySelectorAll('input[data-sub]')];
+    if(!subs.length){ if(g.querySelector('input[data-main]').checked) n++; }
+    else n+=subs.filter(c=>c.checked).length;
+  });
+  return n;
+}
 
-buildTree('industries',INDUSTRIES,indSel);
-buildTree('personas',PERSONAS,perSel);
+/* ---------- getters ---------- */
+function val(id){return ($(id).value||'').trim();}
+function checks(id){return [...$(id).querySelectorAll('input:checked')].map(i=>i.value);}
+function radio(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:'';}
+function niceDate(v){ if(!v) return ''; const d=new Date(v+'T00:00:00'); return d.toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}); }
 
-/* ---------- helpers ---------- */
-function val(id){var e=document.getElementById(id);return e?(e.value||'').trim():'';}
-function checks(cls){return [...document.querySelectorAll('.'+cls+':checked')].map(c=>c.value);}
-function radio(name){var e=document.querySelector('input[name='+name+']:checked');return e?e.value:'';}
-function fmt(n){return Math.round(n).toLocaleString('en-AU');}
+/* ---------- campaign type ---------- */
+const TYPES={dcd:"Digital: profiled leads + display",dc:"Digital: profiled leads only",tq:"Tele: qualified leads",df:"Digital first: profiled + qualified"};
+const ctype=()=>radio('ctype');
+const vtype=()=>ctype()||'dcd';               /* view defaults to the standard build until a type is picked */
+const hasCS=()=>['dcd','dc','df'].includes(vtype());
+const hasQL=()=>['tq','df'].includes(vtype());
+const dispOn=()=>vtype()==='dcd'||(vtype()==='df'&&radio('disp')==='Yes');
+const qRequired=()=>hasCS();
 
+function applyType(){
+  const t=vtype();
+  document.querySelectorAll('[data-types]').forEach(el=>{el.classList.toggle('hide',!el.dataset.types.split(' ').includes(t));});
+  $('displaybox').classList.toggle('show',dispOn());
+  $('dispcomm').classList.toggle('hide',!dispOn());
+  $('n_vol').textContent=['dcd','df'].includes(t)?'6':'5';
+  document.querySelectorAll('.qlabel').forEach(s=>s.textContent=t==='tq'?'Discovery':'Profiling');
+  document.querySelectorAll('.qreq').forEach(s=>s.style.display=qRequired()?'':'none');
+  const h=[];
+  if(hasCS()) h.push('Profiled leads are tele-verified downloads with 3 profiling questions, capped at 2 leads per account.');
+  if(hasQL()) h.push('Qualified leads are tele-qualified against the criteria above, capped at 1 lead per account.');
+  if(t==='df') h.push('Qualified leads are worked from the profiled audience; we confirm the final profiled to qualified mix in the SOW.');
+  h.push('Pricing ex GST.');
+  $('volhint').textContent=h.join(' ');
+  $('c_leads').placeholder=hasCS()?'e.g. 71':'e.g. 30';
+}
+
+/* ---------- logic ---------- */
 function talMode(){
-  var r=radio('tal');
-  document.getElementById('talbox').classList.toggle('show',r==='Yes');
-  document.getElementById('talnote').classList.toggle('show',r==='No');
-  if(r==='Yes'&&!val('c_leads')&&val('f_csleads'))document.getElementById('c_leads').value=val('f_csleads');
-  talCheck();
+  const m=radio('tal');
+  $('talbox').classList.toggle('show',m==='Yes');
+  $('talnote').classList.toggle('show',m==='No');
+  $('prio_row').classList.toggle('hide',m!=='Yes');
 }
+const leadField=()=>hasCS()?'f_csleads':'f_qleads';
 function talCheck(){
-  var acc=parseFloat(val('c_acc')), leads=parseFloat(val('c_leads'));
-  var v=document.getElementById('talverdict');
-  if(!acc||!leads){v.classList.remove('show');return;}
-  var rec=Math.round(leads*7); // ~7 accounts per lead
-  v.classList.add('show');
-  if(acc>=rec){v.className='talverdict show ok';v.querySelector('.ic').textContent='✓';document.getElementById('talverdict_t').innerHTML='<b>Looks sufficient.</b> A list of '+fmt(acc)+' accounts comfortably supports '+fmt(leads)+' leads.';}
-  else{v.className='talverdict show warn';v.querySelector('.ic').textContent='!';document.getElementById('talverdict_t').innerHTML='<b>You may need a larger list.</b> For '+fmt(leads)+' leads we\'d suggest around '+fmt(rec)+' accounts — roughly '+fmt(rec-acc)+' more than your '+fmt(acc)+'.';}
-}
-function assetCheck(){
-  var n=parseFloat(val('f_assets')), m=document.getElementById('assetmsg');
-  if(!n){m.textContent='';m.className='assetflag';return;}
-  if(n<3){m.textContent='Below our 3–4 minimum — we may add assets so testing is valid.';m.className='assetflag bad';}
-  else{m.textContent='✓ Meets the 3–4 minimum.';m.className='assetflag ok';}
-}
-function commCalc(){
-  var l=parseFloat(val('f_csleads'));
-  document.getElementById('f_csval').value=l?'$'+fmt(l*105)+' AUD':'';
-  if(document.getElementById('talbox').classList.contains('show')&&!val('c_leads')&&l){document.getElementById('c_leads').value=l;talCheck();}
-  var b=parseFloat(val('f_prog')), bm=document.getElementById('budgetmsg'), imp=document.getElementById('f_imp');
-  if(!b){bm.textContent='';bm.className='budgetflag';imp.value='';}
-  else{
-    imp.value=fmt(b/28*1000)+' impressions';
-    if(b<5000){bm.textContent='Display budget must be at least $5,000 AUD.';bm.className='budgetflag bad';}
-    else{bm.textContent='✓ Meets the $5,000 minimum.';bm.className='budgetflag ok';}
+  const v=$('talverdict'); const acc=+val('c_acc'); const leads=+val('c_leads');
+  if(radio('tal')!=='Yes'||!acc||!leads){v.className='talverdict';return;}
+  if(!hasCS()){
+    v.className='talverdict show ok'; $('talverdict_i').textContent='i';
+    $('talverdict_t').textContent=`We'll run a count against your ${fmt(acc)} accounts to confirm ${fmt(leads)} qualified leads is achievable (max 1 per account).`;
+    return;
+  }
+  const need=leads*ACC_PER_LEAD;
+  if(acc>=need){
+    v.className='talverdict show ok'; $('talverdict_i').textContent='✓';
+    $('talverdict_t').textContent=`Looks sufficient. A list of ${fmt(acc)} accounts comfortably supports ${fmt(leads)} leads.`;
+  } else {
+    const sug=Math.ceil(need/500)*500;
+    v.className='talverdict show warn'; $('talverdict_i').textContent='!';
+    $('talverdict_t').textContent=`You may need a larger list. For ${fmt(leads)} leads we'd suggest around ${fmt(sug)} accounts, roughly ${fmt(sug-acc)} more than your ${fmt(acc)}.`;
   }
 }
-
-function assemble(){
-  commCalc();
-  var topics=checks('topic'); var to=val('f_topic_other'); if(to)topics.push(to);
-  var inds=getTree('industries',INDUSTRIES);
-  var pers=getTree('personas',PERSONAS); var po=val('f_per_other'); if(po)pers.push('Titles/seniority: '+po);
-  var q=[val('f_q1'),val('f_q2'),val('f_q3')].filter(Boolean).map((x,i)=>'   Q'+(i+1)+': '+x).join('\n');
-  var talLine=radio('tal')==='Yes' ? ('Yes — '+(val('c_acc')||'?')+' accounts') : (radio('tal')==='No'?'No — target by profile':'—');
-  return `FUJITSU CAMPAIGN REQUEST
-========================
-From        : ${val('f_owner')||'—'}  ${val('f_email')?'<'+val('f_email')+'>':''}
-Solution    : ${topics.join(', ')||'—'}
-Goal/offer  : ${val('f_goal')||'—'}
-
-AUDIENCE
-Geographies : ${checks('geo').join(', ')||'—'}
-Industries  : ${inds.join(', ')||'—'}
-Company size: ${checks('size').join(', ')||'—'}
-Personas    : ${pers.join(', ')||'—'}
-Seniority   : Manager+ (unless noted)
-Target list : ${talLine}
-Exclusions  : ${val('f_excl')||'—'}
-
-CONTENT & QUESTIONS
-Assets      : ${val('f_assets')||'—'} — ${val('f_assetlink')||'—'}
-Profiling questions:
-${q||'   —'}
-
-VOLUMES & BUDGET
-CS leads    : ${val('f_csleads')||'—'} @ $105 = ${val('f_csval')||'—'}
-Display     : ${val('f_prog')?'$'+fmt(parseFloat(val('f_prog')))+' AUD':'—'} @ $28 CPM = ${val('f_imp')||'—'}`;
+function assetCheck(){
+  const m=$('assetmsg'); const a=val('f_assets');
+  if(a===''||!hasCS()){m.className='flag';m.textContent='';return;}
+  if(+a>=3){m.className='flag ok';m.textContent='✓ Meets the 3 to 4 minimum.';}
+  else{m.className='flag bad';m.textContent='Below our 3 to 4 minimum. We may add assets so testing is valid.';}
 }
+function dateCheck(){
+  const s=val('f_start'), e=val('f_end'), m=$('datemsg');
+  $('f_dur').value=''; m.className='flag'; m.textContent='';
+  if(s&&e){
+    const days=(new Date(e)-new Date(s))/864e5;
+    if(days<=0){m.className='flag bad';m.textContent='End date must be after the launch date.';return;}
+    $('f_dur').value=(days/7).toFixed(1).replace('.0','')+' weeks';
+    if(days<28){m.className='flag bad';m.textContent='Under 4 weeks is tight. We may not be able to deliver full volume in this window.';}
+  }
+  if(s){
+    const lead=(new Date(s)-new Date(new Date().toDateString()))/864e5;
+    if(lead<14&&!m.className.includes('bad')){m.className='flag bad';m.textContent='Launch is under 2 weeks away. We will confirm whether setup can be completed in time.';}
+  }
+}
+function commCalc(){
+  const cs=hasCS()?(+val('f_csleads'))*CPL:0;
+  const ql=hasQL()?(+val('f_qleads'))*CPQL:0;
+  $('f_csval').value=cs?`$${fmt(cs)} AUD`:'';
+  $('f_qval').value=ql?`$${fmt(ql)} AUD`:'';
+  const prog=+val('f_prog'); const b=$('budgetmsg');
+  if(dispOn()&&val('f_prog')!==''){
+    $('f_imp').value=`${fmt(prog/CPM*1000)} impressions`;
+    if(prog>=MIN_DISPLAY){b.className='flag ok';b.textContent='✓ Meets the $5,000 AUD minimum.';}
+    else{b.className='flag bad';b.textContent='Display budget must be at least $5,000 AUD.';}
+  } else {$('f_imp').value='';b.className='flag';b.textContent='';}
+  const tot=cs+ql+(dispOn()?prog:0);
+  $('f_total').value=tot?`$${fmt(tot)} AUD (ex GST)`:'';
+}
+function fileNames(){return [...($('f_exclfiles').files||[])].map(f=>f.name);}
+function renderFiles(){
+  const n=fileNames();
+  $('filelist').innerHTML=n.map(x=>`<span class="chip">📎 ${esc(x)}</span>`).join('');
+}
+
+/* ---------- readiness ---------- */
+function missing(){
+  const m=[]; const t=ctype();
+  if(!val('f_owner')||!val('f_email')) m.push('Your name and email');
+  if(!t) m.push('Campaign type');
+  if(!checks('g_topic').length&&!val('f_topic_other')) m.push('Solution area');
+  if(!val('f_goal')) m.push('Campaign goal / offer');
+  if(!val('f_obj')) m.push('Primary objective');
+  if(!checks('g_kpi').length) m.push('KPIs to measure success');
+  if(!val('f_follow')) m.push('Who follows up the leads');
+  if(!val('f_start')||!val('f_end')) m.push('Launch and end dates');
+  if(!checks('g_geo').length) m.push('Geography');
+  if(!countTree('industries')&&radio('tal')!=='Yes') m.push('Industries (or a TAL)');
+  if(!countTree('personas')&&!val('f_per_other')) m.push('Personas / functions');
+  if(!radio('tal')) m.push('Target accounts: TAL or profile');
+  if(radio('tal')==='Yes'&&!val('f_tallink')) m.push('TAL file link');
+  if(hasCS()){
+    if(!val('f_assets')||+val('f_assets')<3) m.push('At least 3 assets');
+    if(!val('f_assetlink')) m.push('Assets link');
+    const qm=[1,2,3].filter(n=>!val('f_q'+n)).map(n=>'Q'+n);
+    if(qm.length) m.push('Profiling '+qm.join(', '));
+    if(!val('f_csleads')) m.push('Profiled leads wanted');
+  }
+  if(vtype()==='tq'&&!val('f_collat')) m.push('Offer and supporting collateral');
+  if(hasQL()){
+    if(!checks('g_qual').length&&!val('f_qother')) m.push('Qualification criteria');
+    if(!val('f_qdeliver')) m.push('How qualified leads are handed over');
+    if(!val('f_qleads')) m.push('Qualified leads wanted');
+  }
+  if(vtype()==='df'&&!radio('disp')) m.push('Display: yes or no');
+  if(dispOn()){
+    if(!radio('bansrc')) m.push('Who supplies the banners');
+    if(!val('f_lp')) m.push('Display landing page');
+    if(!val('f_prog')||+val('f_prog')<MIN_DISPLAY) m.push('Display budget of at least $5,000 AUD');
+  }
+  if(!val('f_po')) m.push('Budget owner / PO approver');
+  return m;
+}
+function readiness(){
+  const m=missing(); const s=$('status');
+  if(!m.length){s.className='status ok';s.textContent='✓ Brief complete';$('readylist').innerHTML='<div class="allok">✓ All essentials are in. Copy the request and send it to Direct IT.</div>';}
+  else{s.className='status bad';s.textContent=`Brief: ${m.length} item${m.length>1?'s':''} to complete`;$('readylist').innerHTML='<ul>'+m.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';}
+}
+
+/* ---------- question library ---------- */
+const qText=x=>x.q+'\n'+x.a.map(o=>'- '+o).join('\n');
+function renderLib(force){
+  const sel=checks('g_topic'); const key=(libAll?'ALL|':'')+sel.join('|');
+  if(!force&&key===libKey) return; libKey=key;
+  $('lib_toggle').textContent=libAll?'Show matching only':'Show all solutions';
+  const sets=QLIB.map((s,i)=>({...s,i})).filter(s=>libAll||s.areas.some(a=>sel.includes(a)));
+  let html='';
+  if(!sets.length){
+    html=`<div class="empty">${sel.length?'No previously used questions for '+esc(sel.join(', '))+' yet. Write your own below, or':'Tick a solution area above to see proven questions, or'} <a href="#" onclick="toggleLib();return false">browse all sets</a>.</div>`;
+  } else {
+    html=sets.map(s=>`<div class="qset${sets.length===1?' open':''}" id="qs_${s.i}">
+      <div class="qset-head" onclick="this.parentElement.classList.toggle('open')">
+        <span><span class="chev">▶</span><span class="t">${esc(s.name)}</span><span class="c">${esc(s.ctx)}</span></span>
+        <span class="r"><button type="button" class="use" onclick="event.stopPropagation();useSet(${s.i})">Use this set</button></span>
+      </div>
+      <div class="qset-body">${s.qs.map((x,j)=>`<div class="libq"><div><div class="q">${esc(x.q)}</div><ul>${x.a.map(o=>`<li>${esc(o)}</li>`).join('')}</ul></div>
+        <div class="slot">${[1,2,3].map(n=>`<button type="button" title="Put into Q${n}" onclick="useQ(${s.i},${j},${n})">Q${n}</button>`).join('')}</div></div>`).join('')}</div>
+    </div>`).join('');
+  }
+  $('lib').innerHTML=html;
+}
+function toggleLib(){libAll=!libAll;renderLib(true);}
+function useQ(si,qi,n){$('f_q'+n).value=qText(QLIB[si].qs[qi]);flash(n);refresh();}
+function useSet(si){QLIB[si].qs.forEach((x,j)=>{$('f_q'+(j+1)).value=qText(x);});[1,2,3].forEach(flash);refresh();}
+function flash(n){const el=$('f_q'+n);el.style.borderColor='var(--green)';el.style.boxShadow='0 0 0 2px var(--greenbg)';setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';},900);}
+
+function refresh(){
+  applyType(); talMode(); renderLib();
+  const i=countTree('industries'), p=countTree('personas');
+  $('ind_sel').textContent=i?`${i} selected`:'None selected';
+  $('per_sel').textContent=p?`${p} selected`:'None selected';
+  talCheck(); assetCheck(); dateCheck(); commCalc(); readiness();
+  if($('out').value) buildText();
+}
+
+/* ---------- output ---------- */
 function buildText(){
-  var t=assemble();document.getElementById('out').value=t;
-  if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>{var c=document.getElementById('copied');c.textContent='Copied to clipboard ✓';setTimeout(()=>c.textContent='',2500);});
-  document.getElementById('out').scrollIntoView({behavior:'smooth',block:'center'});
-}
-function emailIt(){
-  var t=assemble();document.getElementById('out').value=t;
-  var subj='Fujitsu Campaign Request — '+(checks('topic')[0]||val('f_topic_other')||'New campaign');
-  window.location.href='mailto:david.jennings@directit.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(t);
-}
-function clearForm(){
-  document.querySelectorAll('input,textarea,select').forEach(el=>{
-    if(el.type==='checkbox'||el.type==='radio'){el.checked=false;el.indeterminate=false;}
-    else if(!el.readOnly)el.value='';
+  const L=[]; const pad=s=>(s+'            ').slice(0,12)+': ';
+  const line=(k,v)=>L.push(pad(k)+(v||'-'));
+  const t=vtype();
+  const topic=[...checks('g_topic'),val('f_topic_other')].filter(Boolean).join(', ');
+  L.push('FUJITSU CAMPAIGN REQUEST','========================');
+  line('Campaign',val('f_name'));
+  line('Type',ctype()?TYPES[ctype()]:'');
+  line('From',`${val('f_owner')} <${val('f_email')}>`);
+  line('Solution',topic);
+  line('Goal/offer',val('f_goal'));
+  line('Launch',niceDate(val('f_start')));
+  line('End',niceDate(val('f_end'))+(val('f_dur')?` (${val('f_dur')})`:''));
+  if(val('f_deadline')) line('Deadline',val('f_deadline'));
+  L.push('','OBJECTIVE & SUCCESS MEASURE');
+  line('Objective',val('f_obj'));
+  line('KPIs',checks('g_kpi').join(', '));
+  line('KPI target',val('f_kpi_target'));
+  line('Follow-up',val('f_follow'));
+  line('Reporting',val('f_report'));
+  L.push('','AUDIENCE');
+  line('Geographies',checks('g_geo').join(', '));
+  line('Industries',getTree('industries').join(', '));
+  line('Company size',checks('g_size').join(', '));
+  const per=[...getTree('personas')]; if(val('f_per_other')) per.push('Titles/seniority: '+val('f_per_other'));
+  line('Personas',per.join(', '));
+  line('Seniority','Manager+ (unless noted)');
+  const tal=radio('tal');
+  line('Target list',tal==='Yes'?`Yes, ${val('c_acc')?fmt(+val('c_acc'))+' accounts':'size TBC'}${val('f_tallink')?' | '+val('f_tallink'):''}`:tal==='No'?'No, target by profile':'');
+  L.push('','EXCLUSIONS');
+  line('Standard',checks('g_excl').join(', '));
+  const fn=fileNames();
+  line('Files',fn.length?fn.join(', ')+' (attached to email)':'');
+  if(val('f_excllink')) line('List link',val('f_excllink'));
+  line('Additional',val('f_excl'));
+  if(tal==='Yes') line('TAL vs excl.',radio('prio')||'TBC');
+  L.push('','CONTENT & QUESTIONS');
+  if(hasCS()) line('Assets',val('f_assets')+(val('f_assetlink')?' | '+val('f_assetlink'):''));
+  if(t==='tq') line('Collateral',val('f_collat'));
+  if(hasQL()){
+    L.push('Qualification criteria:');
+    const q=[...checks('g_qual')]; if(val('f_qtime')) q.push('Timeline: '+val('f_qtime')); if(val('f_qother')) q.push(val('f_qother'));
+    (q.length?q:['-']).forEach(x=>L.push('   - '+x));
+    line('Handover',val('f_qdeliver'));
+    if(val('f_sme')) line('SME',val('f_sme'));
+  }
+  L.push((t==='tq'?'Discovery':'Profiling')+' questions:');
+  [1,2,3].forEach(n=>{
+    const lines=(val('f_q'+n)||'-').split('\n').map(s=>s.trim()).filter(Boolean);
+    L.push(`   Q${n}: `+lines[0]);
+    lines.slice(1).forEach(s=>L.push('       '+s));
   });
-  document.getElementById('out').value='';
-  document.getElementById('talbox').classList.remove('show');
-  document.getElementById('talnote').classList.remove('show');
-  indSel();perSel();assetCheck();commCalc();
-}
-function loadExample(){
-  var set=(id,v)=>{var e=document.getElementById(id);if(e)e.value=v;};
-  set('f_owner','Laura'); set('f_email','laura@fujitsu.com');
-  document.querySelectorAll('.topic').forEach(c=>c.checked=(c.value==='ServiceNow'));
-  set('f_goal','Drive profiled leads for ServiceNow across FSI — new-logo and intent audiences to a DIT landing page for nurture.');
-  document.querySelectorAll('.geo').forEach(c=>c.checked=true);
-  // industries: Financial Services (all) + Technology & IT (all)
-  ['Financial Services','Technology & IT'].forEach(m=>{
-    document.querySelectorAll('#industries .grp').forEach(g=>{var mc=g.querySelector('.m');if(mc.dataset.main===m){mc.checked=true;g.querySelectorAll('.s').forEach(s=>s.checked=true);mc.indeterminate=false;}});
-  });
-  indSel();
-  ['501–1,000','1,001–5,000','5,001–10,000','10,001+'].forEach(v=>{document.querySelectorAll('.size').forEach(c=>{if(c.value===v)c.checked=true;});});
-  // personas: pick some subs under IT & Technology
-  document.querySelectorAll('#personas .grp').forEach(g=>{
-    if(g.querySelector('.m').dataset.main==='IT & Technology'){
-      g.querySelectorAll('.s').forEach(s=>{if(['Information Technology / Technology Leadership','Cybersecurity, Risk & Compliance (IT)','IT Operations & Support'].includes(s.value))s.checked=true;});
-      syncMain(g.querySelector('.m'),g.querySelector('.grp-subs'));
+  if(['dcd','df'].includes(t)){
+    L.push('','DISPLAY');
+    line('Display',dispOn()?'Yes':(t==='df'?(radio('disp')||''):''));
+    if(dispOn()){
+      line('Banners',radio('bansrc'));
+      line('Sizes',checks('g_ban').join(', '));
+      line('Assets link',val('f_banlink'));
+      line('Landing page',val('f_lp'));
     }
-    if(g.querySelector('.m').dataset.main==='Executive Leadership'){g.querySelector('.m').checked=true;}
-  });
-  perSel();
-  set('f_per_other','CIO, CISO, CRO, GRC, Head of Risk / IT Ops');
-  var yes=document.querySelector('input[name=tal][value="Yes"]'); if(yes){yes.checked=true;talMode();}
-  set('c_acc','500');
-  set('f_excl','Big 4 banks (CBA, Westpac, NAB, ANZ); MSPs, IT resellers/distributors, hardware/software vendors, systems integrators');
-  set('f_assets','3'); set('f_assetlink','Drive folder (3 assets + banners; more video to follow)');
-  set('f_q1','Which of the following are you investing in or evaluating? (select all)');
-  set('f_q2','What is your timeframe for this initiative?');
-  set('f_q3','Which best describes your role in the decision?');
-  set('f_csleads','71'); set('f_prog','5000');
-  assetCheck();commCalc();talCheck();
+  }
+  L.push('','VOLUMES & BUDGET');
+  if(hasCS()){const l=+val('f_csleads'); line('Profiled',l?`${fmt(l)} @ $${CPL} = $${fmt(l*CPL)} AUD (max 2 per account)`:'');}
+  if(hasQL()){const l=+val('f_qleads'); line('Qualified',l?`${fmt(l)} @ $${CPQL} = $${fmt(l*CPQL)} AUD (max 1 per account)`:'');}
+  if(dispOn()){const p=+val('f_prog'); line('Display',p?`$${fmt(p)} AUD @ $${CPM} CPM = ${fmt(p/CPM*1000)} impressions`:'');}
+  line('Total',val('f_total'));
+  line('PO approver',val('f_po'));
+  if(val('f_cc')) line('Cost centre',val('f_cc'));
+  const m=missing();
+  if(m.length){L.push('','STILL TO CONFIRM'); m.forEach(x=>L.push(' - '+x));}
+  const out=L.join('\n'); $('out').value=out; return out;
 }
-indSel();perSel();assetCheck();commCalc();
+async function copyRequest(){
+  const t=buildText(); let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true;}catch(e){
+    try{$('out').select();ok=document.execCommand('copy');}catch(_){}
+  }
+  const att=fileNames().length?` Remember to attach your ${fileNames().length} exclusion file${fileNames().length>1?'s':''}.`:'';
+  $('copied').textContent=ok?'✓ Copied. Paste it into an email to your Direct IT account team.'+att:'Select the text above and copy it manually.';
+  $('out').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ---------- clear / example ---------- */
+function clearForm(){
+  document.querySelectorAll('.wrap input:not([readonly]), .wrap textarea, .wrap select').forEach(el=>{
+    if(el.type==='checkbox'||el.type==='radio'){el.checked=false;el.indeterminate=false;} else el.value='';
+  });
+  $('out').value=''; $('copied').textContent=''; renderFiles();
+  refresh();
+}
+function setTicks(id,vals){$(id).querySelectorAll('input').forEach(i=>i.checked=vals.includes(i.value));}
+function setTree(id,mains,subs){
+  $(id).querySelectorAll('.grp').forEach(g=>{
+    const m=g.querySelector('input[data-main]'); const all=mains.includes(m.dataset.main);
+    m.checked=all; g.querySelectorAll('input[data-sub]').forEach(c=>c.checked=all||subs.includes(c.value));
+    if(g.querySelector('input[data-sub]')) syncMain(g);
+  });
+}
+function setRadio(name,v){document.querySelectorAll(`input[name="${name}"]`).forEach(r=>r.checked=r.value===v);}
+function loadExample(){
+  clearForm();
+  const d=n=>{const x=new Date();x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);};
+  $('f_owner').value='Laura'; $('f_email').value='laura@fujitsu.com'; $('f_name').value='ServiceNow FSI';
+  setRadio('ctype','dcd');
+  setTicks('g_topic',['ServiceNow']);
+  $('f_goal').value='Drive profiled leads for ServiceNow across FSI. New-logo and intent audiences to a DIT landing page for nurture.';
+  $('f_obj').value='Pipeline generation'; $('f_follow').value='Fujitsu LDR team'; $('f_report').value='Weekly';
+  setTicks('g_kpi',['Pipeline value (AUD)','Opportunities / SQLs created']); $('f_kpi_target').value='300K AUD pipeline and 6 opportunities within 90 days of campaign end';
+  $('f_start').value=d(21); $('f_end').value=d(77); $('f_deadline').value='Q4 pipeline target';
+  setTicks('g_geo',['Australia','New Zealand']);
+  setTree('industries',['Financial Services','Technology & IT'],[]);
+  setTicks('g_size',['501–1,000','1,001–5,000','5,001–10,000','10,001+']);
+  setTree('personas',['Executive Leadership'],['Information Technology / Technology Leadership','IT Operations & Support','Cybersecurity, Risk & Compliance (IT)']);
+  $('f_per_other').value='CIO, CISO, CRO, GRC, Head of Risk / IT Ops';
+  setRadio('tal','Yes'); $('c_acc').value=500; $('c_leads').value=71; $('f_tallink').value='SharePoint: FSI TAL v2.xlsx';
+  setTicks('g_excl',['Existing customers for this solution','Open opportunities / active deals','MSPs, resellers and distributors','Hardware and software vendors','Systems integrators']);
+  $('f_excllink').value='SharePoint: Open opps and customers suppression.xlsx';
+  $('f_excl').value='Big 4 banks (CBA, Westpac, NAB, ANZ)';
+  setRadio('prio','Exclude it');
+  $('f_assets').value=3; $('f_assetlink').value='Drive folder (3 assets + banners; more video to follow)';
+  $('f_q1').value='Which of the following are you investing in or evaluating? (select all)\n- IT service management\n- Risk and compliance workflows\n- Customer service management\n- None of the above';
+  $('f_q2').value='What is your timeframe for this initiative?\n- 0 to 6 months\n- 6 to 12 months\n- 12+ months\n- No defined timeline';
+  $('f_q3').value='Which best describes your role in the decision?\n- Final decision maker\n- Recommender / influencer\n- Evaluator\n- Researching only';
+  setRadio('bansrc','Fujitsu (final artwork)'); setTicks('g_ban',['300x250','728x90','160x600']);
+  $('f_banlink').value='Drive folder /banners'; $('f_lp').value='https://www.fujitsu.com/au/';
+  $('f_csleads').value=71; $('f_prog').value=5000;
+  $('f_po').value='Laura (laura@fujitsu.com)';
+  refresh(); buildText();
+}
+
+/* ---------- init ---------- */
+buildTicks('g_topic',TOPICS); buildTicks('g_geo',GEOS); buildTicks('g_size',SIZES); buildTicks('g_ban',BANNERS);
+buildTicks('g_kpi',KPIS); buildTicks('g_excl',EXCLS); buildTicks('g_qual',QUALS);
+buildTree('industries',INDUSTRIES); buildTree('personas',PERSONAS);
+document.querySelector('.wrap').addEventListener('input',e=>{
+  if(e.target.id==='c_leads') $(leadField()).value=e.target.value;
+  if(e.target.id===leadField()) $('c_leads').value=e.target.value;
+  refresh();
+});
+document.querySelector('.wrap').addEventListener('change',e=>{
+  if(e.target.name==='ctype') $('c_leads').value=val(leadField());
+  if(e.target.id==='f_exclfiles') renderFiles();
+  refresh();
+});
+const dz=$('dropzone');
+['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,()=>dz.classList.remove('over')));
+dz.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length){$('f_exclfiles').files=e.dataTransfer.files;renderFiles();refresh();}});
+refresh();
 </script>
 </body>
 </html>
