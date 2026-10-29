@@ -54,6 +54,10 @@ const TYPE_LABEL = { dcd: 'ConSyn + Display', dc: 'ConSyn', tq: 'Straight tele',
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === '/api/health') {
+      // Reports which settings this deployment can see (true/false only, never values)
+      return json({ files: !!env.FILES, mondayToken: !!env.MONDAY_TOKEN, boardId: !!env.MONDAY_BOARD_ID, groupId: !!env.MONDAY_GROUP_ID, notify: !!env.NOTIFY_USER_IDS, turnstile: !!env.TURNSTILE_SECRET });
+    }
     if (url.pathname === '/api/submit') {
       if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed' }, 405);
       try {
