@@ -196,7 +196,7 @@
       <div class="row"><label class="lbl" for="f_owner">Your name<span class="req">*</span></label><input id="f_owner" type="text" placeholder="Portfolio / campaign owner"></div>
       <div class="row"><label class="lbl" for="f_email">Your email<span class="req">*</span></label><input id="f_email" type="email" placeholder="name@fujitsu.com"></div>
     </div>
-    <div class="row"><label class="lbl" for="f_name">Campaign name</label><input id="f_name" type="text" placeholder="e.g. ServiceNow FSI Q3"></div>
+    <div class="row"><label class="lbl" for="f_name">Campaign name<span class="req">*</span></label><input id="f_name" type="text" placeholder="e.g. ServiceNow FSI Q3"><div class="hint">This is how your brief is filed with Direct IT, so make it recognisable: solution, audience and quarter.</div></div>
 
     <div class="row">
       <span class="lbl">Campaign type<span class="req">*</span></span>
@@ -711,6 +711,7 @@ function renderFiles(){
 function missing(){
   const m=[]; const t=ctype();
   if(!val('f_owner')||!val('f_email')) m.push('Your name and email');
+  if(!val('f_name')) m.push('Campaign name');
   if(!t) m.push('Campaign type');
   if(!checks('g_topic').length&&!val('f_topic_other')) m.push('Solution area');
   if(!val('f_goal')) m.push('Campaign goal / offer');
@@ -894,6 +895,7 @@ let submitted=false;
 async function submitBrief(){
   if(submitted){setMsg('ok','This brief has already been submitted. Hit <b style="font-size:inherit">Clear</b> to start a new one.');return;}
   if(!val('f_owner')||!val('f_email')){setMsg('err','Add your name and email in section 1 so we know who to come back to.');$('f_owner').focus();return;}
+  if(!val('f_name')){setMsg('err','Add a campaign name in section 1. It\'s how your brief is filed with Direct IT.');$('f_name').focus();return;}
   const fp=fileProblems(); if(fp.length){setMsg('err','Check your attachments: '+esc(fp.join('; '))+'.');return;}
   let token='';
   if(TURNSTILE_SITEKEY){
