@@ -25,7 +25,12 @@
  *   MONDAY_GROUP_ID   group for new briefs, e.g. group_mm6mbbxd (optional)
  *   NOTIFY_USER_IDS   comma-separated monday user ids to notify (optional)
  *   TURNSTILE_SECRET  Turnstile secret key; when set, a valid token is required (optional)
+ *   RESEND_API_KEY    Resend API key, encrypted secret; with BRIEF_EMAIL_TO set, each brief is emailed (optional)
+ *   BRIEF_EMAIL_TO    comma-separated addresses to email each brief to (optional)
+ *   BRIEF_EMAIL_FROM  sender (default: Resend's test sender, which only delivers to the Resend account owner)
+ *   MONDAY_ITEM_URL   monday account URL for item links (default https://directit-global.monday.com)
  *   MONDAY_API_URL    override for testing only (optional)
+ *   RESEND_API_URL    override for testing only (optional)
  */
 
 const MAX_FILES = 5;
@@ -52,16 +57,16 @@ const COL = {
 const TYPE_LABEL = { dcd: 'ConSyn + Display', dc: 'ConSyn', tq: 'Straight tele', df: 'Digital first' };
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (url.pathname === '/api/health') {
       // Reports which settings this deployment can see (true/false only, never values)
-      return json({ files: !!env.FILES, mondayToken: !!env.MONDAY_TOKEN, boardId: !!env.MONDAY_BOARD_ID, groupId: !!env.MONDAY_GROUP_ID, notify: !!env.NOTIFY_USER_IDS, turnstile: !!env.TURNSTILE_SECRET });
+      return json({ files: !!env.FILES, mondayToken: !!env.MONDAY_TOKEN, boardId: !!env.MONDAY_BOARD_ID, groupId: !!env.MONDAY_GROUP_ID, notify: !!env.NOTIFY_USER_IDS, turnstile: !!env.TURNSTILE_SECRET, email: !!(env.RESEND_API_KEY && env.BRIEF_EMAIL_TO) });
     }
     if (url.pathname === '/api/submit') {
       if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed' }, 405);
       try {
-        return await handleSubmit(request, env);
+        return await handleSubmit(request, env, ctx);
       } catch (err) {
         console.error('submit failed', err && err.stack || err);
         return json({ ok: false, error: 'Something went wrong on our side. Please copy the request and email it to your Direct IT account team.' }, 500);
@@ -71,7 +76,7 @@ export default {
   },
 };
 
-async function handleSubmit(request, env) {
+async function handleSubmit(request, env, ctx) {
   if (!env.FILES || !env.MONDAY_TOKEN || !env.MONDAY_BOARD_ID) {
     return json({ ok: false, error: 'Submission is not configured yet. Please copy the request and email it to your Direct IT account team.' }, 503);
   }
@@ -162,7 +167,71 @@ async function handleSubmit(request, env) {
     ).catch(e => console.error('notify failed', uid, e && e.message));
   }
 
+  // 5. Email the brief with the exclusion files attached (optional; never blocks or fails the submission)
+  if (env.RESEND_API_KEY && env.BRIEF_EMAIL_TO) {
+    const job = emailBrief(env, { ref, itemId, itemName, p, brief, stored, prefix })
+      .catch(e => console.error('email failed', e && e.message));
+    if (ctx && ctx.waitUntil) ctx.waitUntil(job); else await job;
+  }
+
   return json({ ok: true, ref, files: stored.length });
+}
+
+/* ---------- email ---------- */
+const EMAIL_ATTACH_MAX = 15 * 1024 * 1024;
+async function emailBrief(env, { ref, itemId, itemName, p, brief, stored, prefix }) {
+  const to = String(env.BRIEF_EMAIL_TO || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!to.length) return;
+  const itemUrl = `${(env.MONDAY_ITEM_URL || 'https://directit-global.monday.com').replace(/\/$/, '')}/boards/${env.MONDAY_BOARD_ID}/pulses/${itemId}`;
+  const attachments = [], skipped = [];
+  let used = 0;
+  for (const s of stored) {
+    if (used + s.size > EMAIL_ATTACH_MAX) { skipped.push(s); continue; }
+    used += s.size;
+    attachments.push({ filename: `Exclusions - ${s.name}`, content: b64(s.buf) });
+  }
+  const t = p.ctype || '';
+  const hasCS = ['dcd', 'dc', 'df'].includes(t), hasQL = ['tq', 'df'].includes(t);
+  const dispOn = t === 'dcd' || (t === 'df' && p.display === 'Yes');
+  const cs = hasCS ? num(p.csLeads) : 0, ql = hasQL ? num(p.qLeads) : 0, disp = dispOn ? num(p.displayBudget) : 0;
+  const budget = cs * PRICES.profiled + ql * PRICES.qualified + disp;
+  const vols = [cs ? `${cs} profiled` : '', ql ? `${ql} qualified` : '', disp ? `display ${disp.toLocaleString('en-AU')} AUD` : ''].filter(Boolean).join(', ');
+  const auDate = d => /^\d{4}-\d{2}-\d{2}$/.test(d || '') ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) : '';
+  const row = (k, v) => v ? `<tr><td style="padding:3px 12px 3px 0;color:#5c6b85;white-space:nowrap;vertical-align:top">${esc(k)}</td><td style="padding:3px 0;color:#182233">${esc(v)}</td></tr>` : '';
+  const html = `<div style="font-family:Arial,sans-serif;font-size:14px;color:#182233;max-width:760px">
+  <div style="background:#182233;color:#fff;padding:14px 18px;border-bottom:4px solid #c5203a">
+    <div style="font-size:11px;letter-spacing:1.5px;color:#f2a7b3;font-weight:bold">DIRECT IT x FUJITSU</div>
+    <div style="font-size:19px;font-weight:bold;margin-top:2px">New Fujitsu brief: ${esc(itemName)}</div>
+    <div style="font-size:13px;color:#b9c6dc;margin-top:2px">ref ${esc(ref)}</div>
+  </div>
+  <table style="border-collapse:collapse;margin:14px 0;font-size:14px">
+    ${row('From', `${p.owner} <${p.email}>`)}${row('Type', TYPE_LABEL[t] || '')}${row('Solution', p.solution)}
+    ${row('Dates', [p.start, p.end].map(auDate).filter(Boolean).join(' to '))}${row('Volumes', vols)}
+    ${row('Budget', budget ? `${budget.toLocaleString('en-AU')} AUD ex GST` : '')}
+    ${row('Exclusion files', stored.length ? String(stored.length) : '')}
+    ${row('Still to confirm', p.missing && p.missing.length ? `${p.missing.length} item${p.missing.length > 1 ? 's' : ''}` : 'Nothing, brief is complete')}
+  </table>
+  <p><a href="${esc(itemUrl)}" style="background:#c5203a;color:#fff;padding:8px 14px;border-radius:6px;text-decoration:none;font-weight:bold">Open in monday</a>
+  &nbsp; <span style="color:#5c6b85;font-size:13px">Reply to this email to reach ${esc(p.owner)} directly.</span></p>
+  ${skipped.length ? `<p style="color:#b7791f">Too large to attach here, on the monday item and in storage: ${skipped.map(s => esc(s.name)).join(', ')}</p>` : ''}
+  <pre style="background:#f8fafc;border:1px solid #dde3ec;border-radius:6px;padding:12px;font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre-wrap">${esc(brief)}</pre>
+  <p style="color:#8a97ae;font-size:12px">Files are also archived in R2 under ${esc(prefix)}/ for 180 days.</p>
+</div>`;
+  const text = `New Fujitsu brief: ${itemName} (ref ${ref})\nFrom ${p.owner} <${p.email}>\nOpen in monday: ${itemUrl}\n\n${brief}`;
+  const r = await fetch((env.RESEND_API_URL || 'https://api.resend.com').replace(/\/$/, '') + '/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: env.BRIEF_EMAIL_FROM || 'Direct IT Briefs <onboarding@resend.dev>',
+      to, reply_to: p.email, subject: `New Fujitsu brief: ${itemName} (${ref})`, html, text, attachments,
+    }),
+  });
+  if (!r.ok) throw new Error(`Resend ${r.status}: ${(await r.text()).slice(0, 300)}`);
+}
+function b64(buf) {
+  const bytes = new Uint8Array(buf); let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
 }
 
 /* ---------- column mapping ---------- */
